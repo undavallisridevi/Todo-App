@@ -10,7 +10,6 @@
   justify-content: center;
   align-items: flex-start;
   padding: 20px 30px;
-  box-shadow: 3px 5px 6px #b1b1b1;
   border-radius: 5px;
 }
 
@@ -75,12 +74,15 @@
   left: 0;
   right: 0;
   bottom: 0;
+
 }
 
 .overlay.active {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.7); /* Adds a semi-transparent black overlay */
+
 }
 
 
@@ -200,4 +202,16 @@ font-size: medium !important;
   cursor: pointer;
 }
 
-
+.ui.menu{
+  background: #c8e0e0 !important;
+}
+tr:nth-child(even) {
+  background-color: #D6EEEE;
+}
+.deletebtn{
+  background: cadetblue !important;
+  color: white !important;
+}
+.active-link {
+  background-color: #a7a9c8 !important /* set the background color to your desired color */
+}

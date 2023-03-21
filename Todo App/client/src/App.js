@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "./components/form";
 import ModalDisplay from "./components/modal";
-import { BrowserRouter, createBrowserRouter, Route, RouterProvider, Routes } from "react-router-dom";
-import { Menu } from "semantic-ui-react";
+import {  createBrowserRouter, RouterProvider} from "react-router-dom";
 import Root from "./components/root";
 import Login from "./components/login";
 import Auth from "./components/auth";
@@ -14,7 +13,11 @@ import Cookies from "universal-cookie/es6";
 export default function App() {
   const cookie = new Cookies();
 
-const isAdmin = cookie.get("role") === "true";
+const [isAdmin, setIsAdmin] = useState(cookie.get("admin") === "true");
+    
+useEffect(() => {
+  setIsAdmin(cookie.get("admin") === "true");
+}, []);
 
 const router=createBrowserRouter(!isAdmin
   ?[
@@ -77,7 +80,7 @@ const router=createBrowserRouter(!isAdmin
   
       <RouterProvider router={router} />
 
-    
+  
      
     </React.StrictMode>
   );

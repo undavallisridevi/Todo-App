@@ -10,12 +10,11 @@ export default function Auth() {
   const navigate = useNavigate();
   const cookie = new Cookies();
   const server = "https://backflipt-accounts.onrender.com";
-  const endpoint="http://192.168.1.43:3020"
   useEffect(() => {
     if (cookie.get("session_id")) {
       axios
         .post(
-          endpoint+"/auth",
+          "http://192.168.1.43:3020/auth",
           { session_id: cookie.get("session_id") },
           {
             headers: { "Content-Type": "application/json" },
@@ -25,12 +24,13 @@ export default function Auth() {
           if (res.data[0]) {
             dispatcher(
               setLogins([res.data, cookie.get("username")]),
-              setAdmin(cookie.get("role") === "true")
+              setAdmin(cookie.get("admin") === "true")
             );
             navigate("/");
           } else {
             cookie.set("session_id", "", { path: "/", expires: new Date() });
-            window.location.href = server + "/?app=todo";
+        window.location.href =server +"/?host=" + window.location.host +"&protocol=" + window.location.protocol +"&app=todo";
+
           }
         });
       return;
@@ -39,18 +39,18 @@ export default function Auth() {
       let session = {};
       for (let p of params) {
         session[p[0]] = p[1];
-        if (p[0] === "role") {
+        if (p[0] === "admin") {
           dispatcher(setAdmin(p[1] === "true"));
         }
         cookie.set(p[0], p[1], { path: "/" });
       }
       if (session["session_id"]) {
         dispatcher(setLogins([true, cookie.get("username")]));
-        dispatcher(setAdmin(cookie.get("role") === "true"));
+        dispatcher(setAdmin(cookie.get("admin") === "true"));
         navigate("/");
       } else {
         dispatcher(setLogins([false, null]));
-        window.location.href = server + "/?app=todo";
+        window.location.href =server +"/?host=" + window.location.host +"&protocol=" + window.location.protocol +"&app=todo";
       }
     }
   });

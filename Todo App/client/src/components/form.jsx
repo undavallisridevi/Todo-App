@@ -9,19 +9,24 @@ import background from '../images/adminpagebg.jpg'
 //component for admin to assign tasks 
 
 export default function Form() {
-
+//options for dropdown
   const [options, setOptions] = useState([]);
+  //tasks assigned by admin
   const [adminTasks, setAdminTasks] = useState([]);
   const [toggleTable, setToggle] = useState(true);
   const [task, setTask] = useState("")
   const [desc, setDesc] = useState("")
+  //toggle show and hide button for table
   const [show, setdisplay] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
+
   //stores selected Assignees
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   //handle selected Assignees change
   const handleChange = (event, { value }) => {
     setSelectedOptions(value);
+    setShowAlert(false);
   };
 
   //handle task description change
@@ -52,7 +57,7 @@ export default function Form() {
           text: "",
           value: ""
         }
-        console.log(data);
+        
         data.forEach(element => {
           temp.key = element.username;
           temp.text = element.username;
@@ -61,7 +66,6 @@ export default function Form() {
           users.push({ ...temp });
 
         });
-
         setOptions(users);
       })
   }, [])
@@ -87,10 +91,11 @@ export default function Form() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (task === '' || selectedOptions.length < 1) {
-      return
-    }
-
+   
+    if (selectedOptions.length === 0) {
+      setShowAlert(true);
+    } 
+else{
     let tasks = []
     let data = {}
     selectedOptions.map((key, index) => {
@@ -122,9 +127,18 @@ export default function Form() {
       .then(setTask(" "))
       .then(setDesc(""))
       .then(setSelectedOptions([]))
-
+  }
   };
-
+  function deletetask(id)
+  {
+  
+    let data = {
+      id: id
+    }
+    axios.post("http://localhost:3020/delete", data, {
+      headers: { "Content-Type": "application/json" }
+    }).then(()=>setToggle(prev=>!prev))
+  }
   return (
     <div style={{ background: `linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url(${background})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
       <center >
@@ -132,7 +146,7 @@ export default function Form() {
         <div style={{ width: "40%", opacity: "1",color:"white" }} >
 
           <h1 style={{ padding: "7%", fontSize: "xx-large" }}>Task Assignment</h1>
-          <form class="ui form">
+          <form class="ui form" onSubmit={handleSubmit}>
             <div class="field">
               <label className='adminlabel' >Task</label>
 
@@ -143,9 +157,10 @@ export default function Form() {
               <input type="text" placeholder='description' name='desc' value={desc} onChange={handleDescChange} />
             </div>
             <div class="field">
-              <label className='adminlabel'>Assignee</label>
+              <label htmlFor='dropdown1' className='adminlabel' required>Assignee</label>
               <Dropdown
-                placeholder={<div class="ui left icon input">
+              id="dropdown1"
+              placeholder={<div class="ui left icon input">
                   Search Assignee.....    <i class="users icon"></i>
                 </div>}
                 fluid
@@ -155,7 +170,9 @@ export default function Form() {
                 options={options}
                 value={selectedOptions}
                 onChange={handleChange}
-              />
+                required
+                />
+            {showAlert && <div class="ui red message">Please select at least one option</div>}
             </div>
             <button class="ui button" style={{
               backgroundColor: "seashell",
@@ -164,7 +181,7 @@ export default function Form() {
               fontSize: "initial",
               marginTop: "3%",
               marginLeft:"60%"
-            }} type="submit" id="addtask" onClick={handleSubmit}>Add Task</button>
+            }} type="submit" id="addtask" >Add Task</button>
           </form>
         </div>
         {'\n'}
@@ -177,7 +194,7 @@ export default function Form() {
         </center>
 
 
-        {show && <Table data={adminTasks} />}
+        {show && <Table data={adminTasks} deletetask={deletetask}/>}
 
       </center>
     </div>

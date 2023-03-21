@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require("cors")
 const axios = require("axios")
+const mongoose = require('mongoose');
 const connectdb = require('./db/conn.js')
 connectdb();
 const UserTasks = require("./db/models/tasks.js");
@@ -10,12 +11,29 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+// Test database connection
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  console.log('Connected to database');
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  if (mongoose.connection.readyState === 1) {
+    res.json({ DBstatus: 'UP', ServerStatus: 'Healthy' });
+  } else {
+    res.status(500).json({ DBstatus: 'DOWN', ServerStatus: 'Healthy' });
+  }
+});
+
+
+
 
 
 app.listen(3020, (req, res) => {
 
 })
-
 
 app.get('/getupdateddata', (req, res) => {
   const today = new Date();
@@ -194,6 +212,7 @@ app.post("/auth", (req, res) => {
       }
     )
     .then((response) => {
+      console.log(response.data);
       res.status(200).send(response.data);
     })
     .catch((err) => {

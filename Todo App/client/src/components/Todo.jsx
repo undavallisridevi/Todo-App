@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Popup, Icon ,Dropdown} from 'semantic-ui-react'
+import { Popup, Icon ,Dropdown, Button} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios';
 import './style.css'
 import Modal from './editmodel';
 import DeleteModal from './deletemodal';
+import DelPermanentModal from './delPermanentModal';
 export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks,deletedTasks,getalltasks,flag,setFlag}) {
  
   //to display only if taskid is null
   const [itemID, setID] = useState(null)
 
-  //setstate for passing task to edit model component to edit the task
+  //setstate for passing task to edit,delete  model component to edit the task
   const [editTask, setTask] = useState(null)
-  
+  const [delTask,setDelTask]=useState(null)
   //to track the status of the task
   const [status, setStatus] = useState(null)
   
@@ -28,7 +29,7 @@ export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks
   
   //keep track of visible tasks using dropdown options
   const [selectedOptions, setSelectedOptions] = useState([]);
-
+  const [open, setOpen] = useState(false)
   //store status and id of charts
   let data = {
     status: "",
@@ -130,7 +131,6 @@ setDeletedToggle (!deletedbtn)
     
     const capitalized = str.replace(/^./, str[0].toUpperCase());
    
-   // return str.charAt(0).toUpperCase() + str.slice(1);
    return capitalized;
 }
 
@@ -159,12 +159,13 @@ setDeletedToggle (!deletedbtn)
     
      if(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id==="deleted")
      {
-      let data = {
-        id: e.target.parentNode.parentNode.id
-      }
-      axios.post("http://localhost:3020/delete", data, {
-        headers: { "Content-Type": "application/json" }
-      }).then( getalltasks )
+      setID(itemID => itemID = e.target.parentNode.parentNode.id);
+      setDelTask(delTask => delTask = e.target.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].innerHTML)
+
+     
+     
+    
+      setOpen(true)
 
     
      }
@@ -176,7 +177,7 @@ setDeletedToggle (!deletedbtn)
      }
   };
 
-    
+ 
 
   return (
 
@@ -195,7 +196,7 @@ setDeletedToggle (!deletedbtn)
    
     
       <div className="wrap" style={{ display: 'flex' ,gap:"0.5rem"}}>
-      <div className="status"  onDragOver={dragOver}  onDrop="return false" id="no_status"  style={{overflow: "auto",height:"400px"}}>
+      <div className="status"  onDragOver={dragOver}  onDrop="return false" id="no_status"  style={{overflowY: "auto",height:"400px"}}>
           <h1 style={{position:"absolute",zIndex: "3"}}id="Todo" onDrop="return false">Todo</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           {todoTasks.map(task => (
@@ -217,7 +218,7 @@ setDeletedToggle (!deletedbtn)
           ))
           }</div>
           </div>
-    { pendingbtn &&  <div className="status"  onDragOver={dragOver}  onDrop={dragDrop} id="pending"  style={{overflow: "auto",height:"400px"}} >
+    { pendingbtn &&  <div className="status"  onDragOver={dragOver}  onDrop={dragDrop} id="pending"  style={{overflowY: "auto",height:"400px"}} >
           <h1 style={{position:"fixed"}} id="pendingtasks" onDrop="return false">Pending</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           {pending.map(task => (
@@ -240,7 +241,7 @@ setDeletedToggle (!deletedbtn)
           }
 </div>
         </div>}
-       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop} style={{overflow: "auto",height:"400px"}}>
+       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop} style={{overflowY: "auto",height:"400px"}}>
           <h1 style={{position:"fixed"}} id="progresstasks" onDrop="return false">Progress</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           {inProgressTasks.map(task => (
@@ -309,7 +310,7 @@ setDeletedToggle (!deletedbtn)
         <span className="popup-value">{task.FromStatus}</span>
       </div>
       <div>
-        <span className="popup-heading">Desc:&nbsp;</span>
+        <span className="popup-heading">Reason:&nbsp;</span>
         <span className="popup-value">{task.deldesc}</span>
       </div>
       <div>
@@ -361,6 +362,21 @@ setDeletedToggle (!deletedbtn)
             setdelVisibility={setdelVisibility}
             id={itemID}
             status={status}
+            getalltasks = {getalltasks}
+            flag={flag}
+            setFlag = {setFlag}
+          />
+        )}
+      </div>
+      <div className={open ? "overlay active" : "overlay"}>
+        {itemID == null? (
+          <></>
+        ) : (
+          <DelPermanentModal
+            visibility={open}
+            setdelPermanentVisibility={setOpen}
+            id={itemID}
+            task={delTask}
             getalltasks = {getalltasks}
             flag={flag}
             setFlag = {setFlag}

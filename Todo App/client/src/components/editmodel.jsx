@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import './style.css'
+import { Button } from "semantic-ui-react";
 const Modal = ({
     setVisibility,
     visibility,
@@ -12,6 +14,18 @@ const Modal = ({
    
   }) => {
     const [usertask,setTask]=useState(task)
+    useEffect(() => {
+      function handleClickOutside(event) {
+          if (event.target.closest('.more-details') === null) {
+              setVisibility(false);
+          }
+      }
+
+      window.addEventListener('mousedown', handleClickOutside);
+      return () => {
+          window.removeEventListener('mousedown', handleClickOutside);
+      };
+  }, [setVisibility]);
     const handleHide = (e) => {
       setVisibility(!visibility);
     };
@@ -34,15 +48,17 @@ function handlesubmit()
       {setFlag(!flag);
         setVisibility(!visibility)})
 }
-console.log(usertask);
+
     return (
       <div className="more-details">
         <span className="close-button">
           <i className="fa-regular fa-circle-xmark" onClick={handleHide}></i>
         </span>
-       <label>Edit Task</label>
-    <input type="text" name="task" value={usertask} onChange={handlechange}/>
- <button style={{color:'blue'}} onClick={handlesubmit}>Save</button>
+       <label><b>Edit Task</b></label>
+       <div class="ui focus input" style={{width:"50%"}}><input type="text" name="task" value={usertask} onChange={handlechange}/></div>
+      <br/>
+    
+    <Button color= 'blue' onClick={handlesubmit}>Save</Button>
       </div>
     );
   };

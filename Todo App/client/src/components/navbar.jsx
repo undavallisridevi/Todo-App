@@ -1,17 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
-import { Menu } from 'semantic-ui-react'
+import { Dropdown, Icon, Menu } from 'semantic-ui-react'
 import Cookies from 'universal-cookie';
 import { logout } from '../functions/auth';
 import { setAdmin, setLogins } from '../reducers/globalStates';
-const cookie=new Cookies();
-const isAdmin = cookie.get("role") === "true";
+import './style.css'
 
 export default function Navbar() {
-    const dispatcher = useDispatch();
+  const cookie=new Cookies();
+  const username = cookie.get("username");
+  const dispatcher = useDispatch();
     const navigate = useNavigate();
     const [activeItem, setActiveItem] = useState("home")
+    const [isAdmin, setIsAdmin] = useState(cookie.get("admin") === "true");
+   
+    
+useEffect(() => {
+  setIsAdmin(cookie.get("admin") === "true");
+}, []);
     
     const destroySession = async () => {
         let flag = await logout();
@@ -35,6 +42,7 @@ export default function Navbar() {
                         as={Link}
                         to="/"
                         onClick={handleItemClick}
+                        className={activeItem === 'home' ? 'active-link' : ''}
                     />
                     <Menu.Item
                         name='Assign Task'
@@ -42,13 +50,27 @@ export default function Navbar() {
                         to="/admin"
                         active={activeItem === 'Assign Task'}
                         onClick={handleItemClick}
+                        className={activeItem === 'Assign Task' ? 'active-link' : ''}
                     />
-                    <Menu.Item
-                        name='Logout'
-                        position="right"
-                        active={activeItem === 'Logout'}
-                        onClick={destroySession}
-                    />
+                   
+                    <Menu.Menu position="right">
+        <Dropdown
+          item
+          trigger={
+            <>
+              <Icon name="user circle" />
+              {username}
+            </>
+          }
+        >
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={destroySession}>
+              <Icon name="sign-out" />
+              Logout
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu.Menu>
                 </>):(
                     <>
                      <Menu.Item

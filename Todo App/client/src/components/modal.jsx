@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Modal, Header } from 'semantic-ui-react'
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
@@ -6,22 +6,27 @@ import Todo from './Todo';
 import Cookies from "universal-cookie"
 import './style.css'
 
-//get username using cookie
-const cookie = new Cookies()
-const user = cookie.get('username')
+
 
 function ModalDisplay() {
   
-//setstate to store task,time and task description
+  //get username using cookie
+  const cookie = new Cookies();
+
+   const user=cookie.get('username');
+
   
   const [data, setdata] = useState({
-    task: '',
-    time: '', desc: ''
+    task:"",
+    time:"", desc:""
   })
   const [flag, setflag] = useState(false)
   const [tasks, setTasks] = useState([])
   const [open, setOpen] = useState(false)
-  
+ 
+  const ref24hrs=useRef(null)
+  const ref12hrs=useRef(null)
+
 
   useEffect(() => {
     gettasks()
@@ -39,7 +44,7 @@ function ModalDisplay() {
             return ele;
         })
         setTasks(alltasks);
-        setflag(!flag)
+        // setflag(!flag)
       })
   }
 
@@ -99,15 +104,21 @@ function ModalDisplay() {
     if (timeFormat === "hrs_24") {
 
       document.getElementById('time').setAttribute("placeholder", "HH:MM")
-      event.target.nextSibling.nextSibling.nextSibling.nextSibling.style.display = "block";
+      ref24hrs.current.style.display="block";
+      ref12hrs.current.style.display="none";
 
-      event.target.nextSibling.nextSibling.nextSibling.nextSibling.nextSibling.style.display = "none";
+      // event.target.nextSibling.nextSibling.nextSibling.nextSibling.style.display = "block";
+
+      // event.target.nextSibling.nextSibling.nextSibling.nextSibling.nextSibling.style.display = "none";
     }
     else {
 
       document.getElementById('time').setAttribute("placeholder", "HH:MM:AM/PM")
-      event.target.nextElementSibling.style.display = "none";
-      event.target.nextElementSibling.nextSibling.style.display = 'block';
+      ref12hrs.current.style.display="block";
+      ref24hrs.current.style.display="none";
+
+      // event.target.nextElementSibling.style.display = "none";
+      // event.target.nextElementSibling.nextSibling.style.display = 'block';
 
 
     }
@@ -119,17 +130,14 @@ function ModalDisplay() {
     let value = e.target.value;
     setdata({ ...data, [name]: value });
   }
+ 
 
+  const handleSubmit = (e) => {
+e.preventDefault();
 
-  const handleSubmit = () => {
-
-    //return if any field is null
-    if (data["task"] === '' || data["time"] === '')
-      return
-
-    //submit form
-    else {
+    
       setOpen(false)
+    
       let arr = {}
 
       arr["task"] = data.task;
@@ -162,7 +170,7 @@ function ModalDisplay() {
 
 
         })
-    }
+      
   }
 
   return (
@@ -189,10 +197,11 @@ function ModalDisplay() {
           <>
 
 
-            <form class="ui form" style={{ width: "70%", marginLeft: "5%" }}>
+            <form class="ui form" onSubmit={handleSubmit} style={{ width: "70%", marginLeft: "5%" }}>
               <div class="field">
                 <label htmlFor='task' style={{ fontSize: "larger" }}>Task</label>
-                <input type="text" name="task" id='task' value={data.task} onChange={handleTask} required />
+
+                <input type="text" name="task" id='task' value={data.task} onChange={handleTask}  required/>
               </div>
               <div class="field">
                 <label htmlFor='taskdesc' style={{ fontSize: "larger" }}>Add Description</label>
@@ -203,10 +212,10 @@ function ModalDisplay() {
               <label style={{ fontSize: "larger" }}>12hrs </label> <input style={{ transform: "scale(1.2)", width: "3%" }} type="radio" onClick={display} name="24hrs" id="hrs_12" />
 
 
-              <div id="clock_24" style={{ display: "none" }} >
+              <div  ref={ref24hrs} id="clock_24" style={{ display: "none" }} >
                 <input style={{ width: "7rem" }} type="time" name="time" id='time24' onChange={handleTask} />
               </div>
-              <div id="clock_12" style={{ display: "none" }}>
+              <div ref={ref12hrs} id="clock_12" style={{ display: "none" }}>
                 <label style={{ fontSize: "125%" }}>Select a time:</label>
                 <div style={{ display: "flex" }}>
                   <select style={{ width: "7rem" }} id="dropdownhr" name="dropdown" >
@@ -234,22 +243,24 @@ function ModalDisplay() {
                   </select>
                 </div>
               </div>
-              <div class="field">
-                <label style={{ fontSize: "larger" }}>Enter Time</label>
+              
+              <div class="field"><br/>
+                <label style={{ fontSize: "larger" }} htmlFor='time'>Enter Time</label>
 
-                <input type="text" name="time" id="time" value={data.time} required onChange={handleTask} />
-              </div>
-
-            </form><br />
-
-          </>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button style={{ padding: "2% 5%", fontSize: "initial" }} color='red' onClick={handleSubmit}>
+                <input type="text" name="time" id="time" value={data.time}  onChange={handleTask}  required/>
+              </div><br />
+              <Modal.Actions>
+          <Button style={{ padding: "2% 5%", marginLeft:"auto",fontSize: "initial" }} color='red' type="submit">
             Add
           </Button>
 
         </Modal.Actions>
+            </form>
+
+          </>
+        
+        
+        </Modal.Content>
       </Modal>
 
 

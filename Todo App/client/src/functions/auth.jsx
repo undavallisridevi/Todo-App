@@ -2,10 +2,12 @@ import Cookies from "universal-cookie";
 
 import axios from "axios";
 let cookie = new Cookies();
+const endpoint="http://192.168.1.31:3020/";
 export const checkAuth = async () => {
+
   if (cookie.get("session_id")) {
     let res = await axios.post(
-      "http://192.168.1.43:3020/auth",
+      endpoint+"auth",
       { session_id: cookie.get("session_id") },
       {
         headers: { "Content-Type": "application/json" },
@@ -22,7 +24,7 @@ export const logout = async () => {
   let flag = false;
   await axios
     .post(
-      "http://192.168.1.43:3020/logout",
+      endpoint+"logout",
       { session_id: cookie.get("session_id") },
       {
         headers: { "Content-Type": "application/json" },

@@ -7,6 +7,7 @@ import Modal from './editmodel';
 import DeleteModal from './deletemodal';
 import DelPermanentModal from './delPermanentModal';
 export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks,deletedTasks,getalltasks,flag,setFlag}) {
+  const endpoint="http://192.168.1.31:3020/";
  
   //to display only if taskid is null
   const [itemID, setID] = useState(null)
@@ -102,7 +103,7 @@ delFromStatus= event.target.parentNode.parentNode.id;  //get status of task
        setdelVisibility(true);
     }
 
-    axios.post("http://localhost:3020/updatestatus", data, {
+    axios.post(endpoint+"updatestatus", data, {
       headers: { "Content-Type": "application/json" }
     }).then(getalltasks )
   }
@@ -219,7 +220,7 @@ setDeletedToggle (!deletedbtn)
           }</div>
           </div>
     { pendingbtn &&  <div className="status"  onDragOver={dragOver}  onDrop={dragDrop} id="pending"  style={{overflowY: "auto",height:"400px"}} >
-          <h1 style={{position:"fixed"}} id="pendingtasks" onDrop="return false">Pending</h1>
+          <h1 style={{position:"absolute"}} id="pendingtasks" onDrop="return false">Pending</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           {pending.map(task => (
             <div key={task._id} className="todo" id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} style={styleForDiv}>
@@ -241,8 +242,8 @@ setDeletedToggle (!deletedbtn)
           }
 </div>
         </div>}
-       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop} style={{overflowY: "auto",height:"400px"}}>
-          <h1 style={{position:"fixed"}} id="progresstasks" onDrop="return false">Progress</h1>
+       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop}  style={{overflowY: "auto",height:"400px"}}>
+          <h1 style={{position:"absolute"}} id="progresstasks" onDrop="return false">Progress</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           {inProgressTasks.map(task => (
             <div key={task._id} className="todo" id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
@@ -264,8 +265,8 @@ setDeletedToggle (!deletedbtn)
           }
 </div>
         </div>}
-       {completedbtn && <div className="status" id="completed"  onDragOver={dragOver}  onDrop={dragDrop} >
-          <h1  style={{position:"fixed"}} id="completedtasks" onDrop="return false">Completed</h1>
+       {completedbtn && <div className="status" id="completed"  onDragOver={dragOver}  onDrop={dragDrop} style={{overflowY: "auto",height:"400px"}} >
+          <h1  style={{position:"absolute"}} id="completedtasks" onDrop="return false">Completed</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           {CompletedTasks.map(task => (
             <div key={task._id} id={task._id} className="todo" draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
@@ -288,8 +289,8 @@ setDeletedToggle (!deletedbtn)
           </div>
         </div>}
 
-      {deletedbtn &&  <div className="status del" id="deleted"  onDragOver={dragOver} onDrop={dragDrop} >
-          <h1 style={{position:"fixed"}}id="deletedtasks" onDrop="return false">Deleted</h1>
+      {deletedbtn &&  <div className="status del" id="deleted"  onDragOver={dragOver} onDrop={dragDrop} style={{overflowY: "auto",height:"400px"}}>
+          <h1 style={{position:"absolute"}}id="deletedtasks" onDrop="return false">Deleted</h1>
           <div style={{marginTop:"50px"}} onDrop="return false">
           &nbsp;&nbsp;<button class="ui primary button" style={{backgroundColor:"blue",fontSize:"initial"}} id="show" onDrop="return false" onClick={display}>show</button>
           {deletedTasks.map(task => (

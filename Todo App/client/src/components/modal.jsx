@@ -9,6 +9,7 @@ import './style.css'
 
 
 function ModalDisplay() {
+  const endpoint="http://192.168.1.31:3020/";
   
   //get username using cookie
   const cookie = new Cookies();
@@ -36,7 +37,7 @@ function ModalDisplay() {
 
    //function to fetch tasks and filter them w.r.t user
   function gettasks() {
-    fetch("http://localhost:3020/getupdateddata")
+    fetch(endpoint+"getupdateddata")
       .then(response => response.json())
       .then(data => {
         const alltasks = data.filter(ele => {
@@ -88,7 +89,7 @@ function ModalDisplay() {
     var am_pm = document.getElementById('am');
     var text = am_pm.options[am_pm.selectedIndex].text;
 
-    var time12hrs = hr + ":" + min + ":" + " " + text;
+    var time12hrs = hr + ":" + min  + " " + text;
     console.log(time12hrs);
     setdata((prev) => {
       console.log(prev);
@@ -160,7 +161,7 @@ e.preventDefault();
 
 
 
-      axios.post("http://localhost:3020/postdata", arr, {
+      axios.post(endpoint+"postdata", arr, {
         headers: { "Content-Type": "application/json" }
       }).then(gettasks)       //to fetch data again on addition of a new task
         .then(() => {                      //reset fields in the form after submission
@@ -174,7 +175,7 @@ e.preventDefault();
   }
 
   return (
-    <div className='container'>
+    <div className='container' >
       <Modal
         closeIcon
         open={open}

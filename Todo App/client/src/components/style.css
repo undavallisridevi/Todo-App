@@ -98,7 +98,7 @@ max-height: 60%; }
 .container{
   background: linear-gradient(skyblue,white);
 
-
+margin-top: 2%;
   height:100vh !important;
 }
 
@@ -148,7 +148,7 @@ max-height: 60%; }
 
 .ui.positive.button
 {
-  background-color: #21ba45 !important;
+  background-color: #36316e !important;
 margin-top: 2% !important;
 padding: 1% !important;
 font-size: medium !important;
@@ -186,13 +186,18 @@ font-size: medium !important;
   margin-bottom: 1rem;
 }
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
+  .todo {
+    flex-direction: row;
+    align-items: center;
+  }
+} */
+@media (min-width: 1072px) {
   .todo {
     flex-direction: row;
     align-items: center;
   }
 }
-
 .todo h4 {
   margin: 0;
 }
@@ -204,10 +209,16 @@ font-size: medium !important;
 
 .ui.menu{
   background: #c8e0e0 !important;
+
+  width: 100% !important;
 }
 tr:nth-child(even) {
   background-color: #D6EEEE;
 }
+td ,th{
+  text-align: center !important;
+}
+
 .deletebtn{
   background: cadetblue !important;
   color: white !important;

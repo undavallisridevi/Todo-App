@@ -9,6 +9,8 @@ import background from '../images/adminpagebg.jpg'
 //component for admin to assign tasks 
 
 export default function Form() {
+  const endpoint="http://192.168.1.31:3020/";
+
 //options for dropdown
   const [options, setOptions] = useState([]);
   //tasks assigned by admin
@@ -73,7 +75,7 @@ export default function Form() {
   //fetch assigned tasks to show them in table
 
   function getData() {
-    fetch("http://localhost:3020/alltasks")
+    fetch(endpoint+"alltasks")
       .then(response => response.json())
       .then(data => {
         setAdminTasks(data);
@@ -121,7 +123,7 @@ else{
     })
 
 
-    await axios.post("http://localhost:3020/postdata", tasks, {
+    await axios.post(endpoint+"postdata", tasks, {
       headers: { "Content-Type": "application/json" }
     }).then(setToggle(prev => !prev))       //to show newly added data to table  
       .then(setTask(" "))
@@ -135,12 +137,12 @@ else{
     let data = {
       id: id
     }
-    axios.post("http://localhost:3020/delete", data, {
+    axios.post(endpoint+"delete", data, {
       headers: { "Content-Type": "application/json" }
     }).then(()=>setToggle(prev=>!prev))
   }
   return (
-    <div style={{ background: `linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url(${background})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+    <div style={{ background: `linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url(${background})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" ,height:"100vh",marginTop:"2%"}}>
       <center >
 
         <div style={{ width: "40%", opacity: "1",color:"white" }} >

@@ -62,6 +62,8 @@ export default function Table({data,deletetask}) {
       {TableRows}
     </tbody>
   </table>
+  
+        <footer style={{textAlign:"center",color:"white"}}>&copy; Copyright 2023 &nbsp;Sridevi</footer>
 </div>
 
   )

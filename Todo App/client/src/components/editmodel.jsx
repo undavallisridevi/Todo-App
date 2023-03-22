@@ -13,7 +13,14 @@ const Modal = ({
     setFlag
    
   }) => {
+  const endpoint="http://192.168.1.31:3020/";
+
     const [usertask,setTask]=useState(task)
+    useEffect(()=>
+    {
+setTask(task)
+    },[task])
+   
     useEffect(() => {
       function handleClickOutside(event) {
           if (event.target.closest('.more-details') === null) {
@@ -25,7 +32,8 @@ const Modal = ({
       return () => {
           window.removeEventListener('mousedown', handleClickOutside);
       };
-  }, [setVisibility]);
+  }, [visibility]);
+ 
     const handleHide = (e) => {
       setVisibility(!visibility);
     };
@@ -41,12 +49,14 @@ function handlesubmit()
         task:usertask,
         id:id
     }
-    axios.post("http://localhost:3020/edit", data, {
+    axios.post(endpoint+"edit", data, {
         headers: { "Content-Type": "application/json" }
       }).then(getalltasks )
       .then(()=>
       {setFlag(!flag);
-        setVisibility(!visibility)})
+        setVisibility(!visibility);
+        
+      })
 }
 
     return (

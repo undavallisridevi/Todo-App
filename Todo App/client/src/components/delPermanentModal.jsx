@@ -14,6 +14,7 @@ const DelPermanentModal = ({
   
  
 }) => {
+  const endpoint="http://192.168.1.31:3020/";
 
   const handleHide = (e) => {
     setFlag(!flag);
@@ -38,7 +39,7 @@ const DelPermanentModal = ({
       
         id: id,
       }
-    axios.post("http://localhost:3020/delete", data, {
+    axios.post(endpoint+"delete", data, {
         headers: { "Content-Type": "application/json" }
       }).then(()=>
     {
@@ -50,16 +51,18 @@ const DelPermanentModal = ({
 
 return (
     
-    <div className="more-details">
+    <div className="more-details" >
  <span className="close-button">
    <i className="fa-regular fa-circle-xmark"onClick={handleHide} ></i>
  </span>
- <h3>"{task}" <br/>will be deleted</h3>
- <span>
- <Button color='green' onClick={delPermanent}>Ok</Button>
+ <h3>"{task}" &nbsp; will be deleted</h3>
+ <hr  style={{    color: "black",width: "-webkit-fill-available",border:"1px solid black"}}/>
+ <span style={{    marginLeft: "auto"}}>
+ <Button color='green' onClick={delPermanent}>Ok</Button>&nbsp;
  <Button color='red' onClick={handleHide}>Cancel </Button></span>
 
 </div>
+
 
 )
 };

@@ -34,13 +34,13 @@ useEffect(() => {
     const handleItemClick = (e, { name }) => setActiveItem(name)
     return (
         <div>
-            <Menu>
+            <Menu fixed='top'>
                 {State.loggedIn ? ( isAdmin ? (<>
                     <Menu.Item
                         name='home'
                         active={activeItem === 'home'}
                         as={Link}
-                        to="/"
+                        to=""
                         onClick={handleItemClick}
                         className={activeItem === 'home' ? 'active-link' : ''}
                     />
@@ -77,7 +77,7 @@ useEffect(() => {
                         name='home'
                         active={activeItem === 'home'}
                         as={Link}
-                        to="/"
+                        to=""
                         onClick={handleItemClick}
                     />
                      <Menu.Item

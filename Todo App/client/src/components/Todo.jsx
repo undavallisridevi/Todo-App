@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Popup, Icon ,Dropdown, Button} from 'semantic-ui-react'
+import { Popup, Icon ,Dropdown} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios';
 import './style.css'
@@ -197,9 +197,9 @@ setDeletedToggle (!deletedbtn)
    
     
       <div className="wrap" style={{ display: 'flex' ,gap:"0.5rem"}}>
-      <div className="status"  onDragOver={dragOver}  onDrop="return false" id="no_status"  style={{overflowY: "auto",height:"400px"}}>
-          <h1 style={{position:"absolute",zIndex: "3"}}id="Todo" onDrop="return false">Todo</h1>
-          <div style={{marginTop:"50px"}} onDrop="return false">
+      <div className="status"  onDragOver={dragOver}  onDrop="return false" id="no_status"  >
+          <h1 style={{position:"absolute"}}id="Todo" onDrop="return false">Todo</h1>
+          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} onDragOver={dragOver}  onDrop="return false" id="no_status" >
           {todoTasks.map(task => (
             <div key={task._id} className="todo" id={task._id} draggable="true" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} onDrop="return false" onDragOver="return false" style={styleForDiv} >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -219,9 +219,9 @@ setDeletedToggle (!deletedbtn)
           ))
           }</div>
           </div>
-    { pendingbtn &&  <div className="status"  onDragOver={dragOver}  onDrop={dragDrop} id="pending"  style={{overflowY: "auto",height:"400px"}} >
+    { pendingbtn &&  <div className="status"  onDragOver={dragOver}  onDrop={dragDrop} id="pending" >
           <h1 style={{position:"absolute"}} id="pendingtasks" onDrop="return false">Pending</h1>
-          <div style={{marginTop:"50px"}} onDrop="return false">
+          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}}  onDragOver={dragOver}  onDrop={dragDrop} id="pending"  >
           {pending.map(task => (
             <div key={task._id} className="todo" id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} style={styleForDiv}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -242,9 +242,9 @@ setDeletedToggle (!deletedbtn)
           }
 </div>
         </div>}
-       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop}  style={{overflowY: "auto",height:"400px"}}>
+       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop}  >
           <h1 style={{position:"absolute"}} id="progresstasks" onDrop="return false">Progress</h1>
-          <div style={{marginTop:"50px"}} onDrop="return false">
+          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop}>
           {inProgressTasks.map(task => (
             <div key={task._id} className="todo" id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -265,9 +265,9 @@ setDeletedToggle (!deletedbtn)
           }
 </div>
         </div>}
-       {completedbtn && <div className="status" id="completed"  onDragOver={dragOver}  onDrop={dragDrop} style={{overflowY: "auto",height:"400px"}} >
+       {completedbtn && <div className="status" id="completed"  onDragOver={dragOver}  onDrop={dragDrop} >
           <h1  style={{position:"absolute"}} id="completedtasks" onDrop="return false">Completed</h1>
-          <div style={{marginTop:"50px"}} onDrop="return false">
+          <div style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="completed" className='tasks' onDragOver={dragOver}  onDrop={dragDrop} >
           {CompletedTasks.map(task => (
             <div key={task._id} id={task._id} className="todo" draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -289,9 +289,9 @@ setDeletedToggle (!deletedbtn)
           </div>
         </div>}
 
-      {deletedbtn &&  <div className="status del" id="deleted"  onDragOver={dragOver} onDrop={dragDrop} style={{overflowY: "auto",height:"400px"}}>
+      {deletedbtn &&  <div className="status del" id="deleted"  onDragOver={dragOver} onDrop={dragDrop} >
           <h1 style={{position:"absolute"}}id="deletedtasks" onDrop="return false">Deleted</h1>
-          <div style={{marginTop:"50px"}} onDrop="return false">
+          <div  className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="deleted"  onDragOver={dragOver} onDrop={dragDrop} >
           &nbsp;&nbsp;<button class="ui primary button" style={{backgroundColor:"blue",fontSize:"initial"}} id="show" onDrop="return false" onClick={display}>show</button>
           {deletedTasks.map(task => (
             <div key={task._id} id={task._id} className="todo" draggable="true"  onDrop="return false" onDragOver="return false"  onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>

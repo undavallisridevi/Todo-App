@@ -226,3 +226,6 @@ td ,th{
 .active-link {
   background-color: #a7a9c8 !important /* set the background color to your desired color */
 }
+.tasks::-webkit-scrollbar {
+  display: none;
+}

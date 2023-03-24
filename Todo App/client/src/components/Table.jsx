@@ -1,70 +1,109 @@
-import React, { useState } from 'react'
-import { Button, Header, Modal ,Icon} from 'semantic-ui-react';
-import './style.css'
-export default function Table({data,deletetask}) {
-  
-  const [open, setOpen] = useState(false)
+import React, { useState } from 'react';
+import { Button, Header, Modal, Icon } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
+import axios from 'axios'
+import Pagination from 'react-js-pagination';
+
+import './style.css';
+
+export default function TableComponent({ data, setToggle, toggleTable }) {
+  const endpoint = "http://192.168.1.43:3020/";
+  const [open, setOpen] = useState(false);
+  const [activePage, setActivePage] = useState(1);
+  const [id,setId]=useState('')
+  const itemsPerPage = 5;
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+  }
+
+  const indexOfLastItem = activePage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+ 
   const TableRows =
-    data.map((info,index) => (
-  
- <tr key={index} id={info._id}>
-          <td>{info.task}</td>
-          <td>{info.desc}</td>
-          <td>{info.username}</td>
-          <td>{info.time}</td>
-          <td>{info.status}</td>
-          <td><Modal
-           size={'tiny'}
-      closeIcon
-      open={open}
-      trigger={<Button className="deletebtn" >Delete</Button>}
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-    >
-      <Header icon='archive' content='Alert' />
-      <Modal.Content>
-        <p>
-         Do you want to delete the task?
-        </p>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button color='red' onClick={() => setOpen(false)}>
-          <Icon name='remove' /> No
-        </Button>
-        <Button color='green' onClick={() => {
-        deletetask(info._id)
-          setOpen(false)}}>
-          <Icon name='checkmark' /> Yes
-        </Button>
-      </Modal.Actions>
-    </Modal></td>
-        </tr>
+    currentItems.map((info, index) => {
+      return <Table.Row id={info._id} key={index}>
+        
 
-    
+        <Table.Cell >{info.task}</Table.Cell>
+        <Table.Cell >{info.desc}</Table.Cell>
+        <Table.Cell>{info.username}</Table.Cell>
+        <Table.Cell>{info.time}</Table.Cell>
+        <Table.Cell>{info.status}</Table.Cell>
+        <Table.Cell> <Button className="deletebtn" value={info._id} onClick={(event)=>{
+          
+          setId(event.target.value)
+          setOpen(true)
+        }}>Delete</Button></Table.Cell>
+       
+      </Table.Row>
 
-    ));
-
-
+    });
 
   return (
-    <div class="table-wrapper" style={{margin:"2rem"}}>
-  <table class="ui celled table unstackable ">
-    <thead style={{fontSize: "large"}}>
-      <tr class="">
-        <th>Task</th>
-        <th>Description</th>
-        <th>Assignee</th>
-        <th>Time</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody class="">
-      {TableRows}
-    </tbody>
-  </table>
-  
-        <footer style={{textAlign:"center",color:"white"}}>&copy; Copyright 2023 &nbsp;Sridevi</footer>
-</div>
+    <div class="table-wrapper" style={{margin:"1rem"}}>
+      <Table striped>
+        <Table.Header style={{fontSize: "large"}}>
+          <Table.Row>
 
-  )
+            <Table.HeaderCell>Task</Table.HeaderCell>
+            <Table.HeaderCell>Description</Table.HeaderCell>
+            <Table.HeaderCell>Assignee</Table.HeaderCell>
+            <Table.HeaderCell>Time</Table.HeaderCell>
+            <Table.HeaderCell>Status</Table.HeaderCell>
+
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {TableRows}
+        </Table.Body>
+       
+        <Pagination
+        activePage={activePage}
+        itemsCountPerPage={itemsPerPage}
+        totalItemsCount={data.length}
+        pageRangeDisplayed={5}
+        onChange={handlePageChange}
+      />
+      </Table>
+    <footer style={{textAlign:"center",color:"black"}}>&copy; Copyright 2023 &nbsp;Sridevi</footer>
+
+      <Modal
+          size={'tiny'}
+          closeIcon
+          open={open}
+          onClose={() => setOpen(false)}
+          onOpen={() => setOpen(true)}
+        >
+          <Header icon='archive' content='Alert' />
+          <Modal.Content>
+            <p>
+              Do you want to delete the task  ?
+            </p>
+          </Modal.Content>
+          <Modal.Actions>
+          
+            <Button color='red' onClick={() => setOpen(false)}>
+              <Icon name='remove' /> No
+            </Button>
+            <Button color='green'  onClick={() => {
+              
+              
+              setOpen(false)
+              let data = {
+      id: id
+    }
+    axios.post(endpoint + "delete", data, {
+      headers: { "Content-Type": "application/json" }
+    }).then(() => setToggle(!toggleTable))
+              
+              }}>
+              <Icon name='checkmark' /> Yes
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      
+        </div>
+  );
 }

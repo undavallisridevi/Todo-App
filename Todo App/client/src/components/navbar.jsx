@@ -15,7 +15,6 @@ export default function Navbar() {
     const [activeItem, setActiveItem] = useState("home")
     const [isAdmin, setIsAdmin] = useState(cookie.get("admin") === "true");
    
-    
 useEffect(() => {
   setIsAdmin(cookie.get("admin") === "true");
 }, []);
@@ -41,16 +40,19 @@ useEffect(() => {
                         active={activeItem === 'home'}
                         as={Link}
                         to=""
+                        exact="true"
                         onClick={handleItemClick}
-                        className={activeItem === 'home' ? 'active-link' : ''}
+                       className={activeItem === 'home' ? 'active-link' : ''}
                     />
+  
                     <Menu.Item
                         name='Assign Task'
                         as={Link}
-                        to="/admin"
                         active={activeItem === 'Assign Task'}
+                        to="/admin"
+                        exact="true"
                         onClick={handleItemClick}
-                        className={activeItem === 'Assign Task' ? 'active-link' : ''}
+                         className={activeItem === 'Assign Task' ? 'active-link' : ''}
                     />
                    
                     <Menu.Menu position="right">

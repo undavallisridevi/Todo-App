@@ -212,13 +212,20 @@ font-size: medium !important;
 
   width: 100% !important;
 }
-tr:nth-child(even) {
-  background-color: #D6EEEE;
+  tr:nth-child(even) {
+  background-color: #f2f6f6 !important;
 }
-td ,th{
+tr:nth-child(odd) {
+  background-color:white !important;
+} 
+ td ,th{
   text-align: center !important;
-}
-
+} 
+td{
+  word-break: break-word !important;
+  width:15% !important;
+  font-size:medium !important;
+}  
 .deletebtn{
   background: cadetblue !important;
   color: white !important;
@@ -229,3 +236,44 @@ td ,th{
 .tasks::-webkit-scrollbar {
   display: none;
 }
+
+
+.deletebtn {
+  border-radius: 4px !important;
+  cursor: pointer !important;
+}
+
+/* pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+ 
+   margin-left: 150%;
+  
+}
+
+.pagination > li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.pagination > li > a {
+  text-decoration: none;
+  color: #333;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.pagination > .active > a {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.pagination > .disabled > a {
+  color: #ccc;
+}
+
+

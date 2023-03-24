@@ -14,7 +14,7 @@ export default function Auth() {
     if (cookie.get("session_id")) {
       axios
         .post(
-          "http://192.168.1.31:3020/auth",
+          "http://192.168.1.43:3020/auth",
           { session_id: cookie.get("session_id") },
           {
             headers: { "Content-Type": "application/json" },

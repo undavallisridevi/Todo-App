@@ -7,7 +7,7 @@ import Modal from './editmodel';
 import DeleteModal from './deletemodal';
 import DelPermanentModal from './delPermanentModal';
 export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks,deletedTasks,getalltasks,flag,setFlag}) {
-  const endpoint="http://192.168.1.31:3020/";
+  const endpoint="http://192.168.1.43:3020/";
  
   //to display only if taskid is null
   const [itemID, setID] = useState(null)

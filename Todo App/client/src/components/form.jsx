@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './style.css'
-import Table from "./Table.jsx";
+import TableComponent from "./Table.jsx";
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
 import { Dropdown } from 'semantic-ui-react';
@@ -9,7 +9,7 @@ import background from '../images/adminpagebg.jpg'
 //component for admin to assign tasks 
 
 export default function Form() {
-  const endpoint="http://192.168.1.31:3020/";
+  const endpoint="http://192.168.1.43:3020/";
 
 //options for dropdown
   const [options, setOptions] = useState([]);
@@ -114,7 +114,15 @@ else{
 
       const formattedToday = yyyy + '-' + mm + '-' + dd;
       data["date"] = formattedToday;
-      data["time"] = new Date().getHours() + ":" + new Date().getMinutes();
+      let hr=new Date().getHours() ;
+      if(hr.length===1)
+      hr="0"+hr;
+      let min=new Date().getMinutes();
+      if(min.length===1)
+      {
+        min="0"+min
+      }
+      data["time"] = hr+ ":" +min;
       data["username"] = key
       data["desc"] = desc;
       data["assigned"] = "true";
@@ -131,16 +139,7 @@ else{
       .then(setSelectedOptions([]))
   }
   };
-  function deletetask(id)
-  {
   
-    let data = {
-      id: id
-    }
-    axios.post(endpoint+"delete", data, {
-      headers: { "Content-Type": "application/json" }
-    }).then(()=>setToggle(prev=>!prev))
-  }
   return (
     <div style={{ background: `linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url(${background})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" ,height:"100vh",marginTop:"2%"}}>
       <center >
@@ -187,7 +186,7 @@ else{
           </form>
         </div>
         {'\n'}
-        <center>
+        <center><br/>
           <div><button class="ui positive button" onClick={toggle}> {show ? "Hide" : "Show"}</button></div>
 
 
@@ -196,7 +195,8 @@ else{
         </center>
 
 
-        {show && <Table data={adminTasks} deletetask={deletetask}/>}
+
+        {show && <TableComponent data={adminTasks} toggleTable={toggleTable} setToggle={setToggle}/>}
 
       </center>
     </div>

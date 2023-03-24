@@ -9,7 +9,7 @@ import './style.css'
 
 
 function ModalDisplay() {
-  const endpoint="http://192.168.1.31:3020/";
+  const endpoint="http://192.168.1.43:3020/";
   
   //get username using cookie
   const cookie = new Cookies();
@@ -27,7 +27,8 @@ function ModalDisplay() {
  
   const ref24hrs=useRef(null)
   const ref12hrs=useRef(null)
-
+  const [showAlert, setShowAlert] = useState(false);
+const [error,setError]=useState('')
 
   useEffect(() => {
     gettasks()
@@ -90,9 +91,8 @@ function ModalDisplay() {
     var text = am_pm.options[am_pm.selectedIndex].text;
 
     var time12hrs = hr + ":" + min  + " " + text;
-    console.log(time12hrs);
+   
     setdata((prev) => {
-      console.log(prev);
       return { ...prev, time: time12hrs }
     })
   };
@@ -103,23 +103,23 @@ function ModalDisplay() {
     let timeFormat = event.target.id;
 
     if (timeFormat === "hrs_24") {
-
+      setdata((prev) => {
+        return { ...prev, time: "" }
+      })
       document.getElementById('time').setAttribute("placeholder", "HH:MM")
       ref24hrs.current.style.display="block";
       ref12hrs.current.style.display="none";
 
-      // event.target.nextSibling.nextSibling.nextSibling.nextSibling.style.display = "block";
-
-      // event.target.nextSibling.nextSibling.nextSibling.nextSibling.nextSibling.style.display = "none";
+     
     }
     else {
-
-      document.getElementById('time').setAttribute("placeholder", "HH:MM:AM/PM")
+      
+      setdata((prev) => {
+        return { ...prev, time: "" }
+      })
+      document.getElementById('time').setAttribute("placeholder", "HH:MM AM/PM")
       ref12hrs.current.style.display="block";
       ref24hrs.current.style.display="none";
-
-      // event.target.nextElementSibling.style.display = "none";
-      // event.target.nextElementSibling.nextSibling.style.display = 'block';
 
 
     }
@@ -136,7 +136,46 @@ function ModalDisplay() {
   const handleSubmit = (e) => {
 e.preventDefault();
 
-    
+  const timePattern =/^(([01]\d|2[0-3]):[0-5]\d|((0?[1-9]|1[0-2]):[0-5]\d\s[AP]M))$/;
+  
+  const timePattern12 = /^(0?[1-9]|1[0-2]):[0-5]\d\s[AP]M$/;
+  const timePattern24 = /^([01]\d|2[0-3]):[0-5]\d$/;
+  const match = data.time.match(timePattern);
+  const match12 = data.time.match(timePattern12);
+  const match24 = data.time.match(timePattern24);
+
+
+
+if(ref24hrs.current.style.display==="block")
+{
+  if (!match24) {
+    setError("HH:MM");
+    setShowAlert(true);
+    return;
+  }
+
+}
+else if(ref12hrs.current.style.display==="block")
+{
+  if (!match12) {
+    setError("HH:MM AM/PM");
+    setShowAlert(true);
+    return;
+  }
+
+}
+else{
+  
+  if (!match) {
+    setError("enter time format in HH:MM or HH:MM AM/PM")
+    setShowAlert(true);
+    return; // invalid hour range for either format
+  }
+
+ 
+}
+
+
       setOpen(false)
     
       let arr = {}
@@ -171,8 +210,8 @@ e.preventDefault();
 
 
         })
-      
-  }
+}
+  
 
   return (
     <div className='container' >
@@ -209,7 +248,7 @@ e.preventDefault();
                 <input type="text" name="desc" id='desc' value={data.desc} onChange={handleTask} />
               </div>
 
-              <label style={{ fontSize: "larger" }}>24hrs </label><input style={{ transform: "scale(1.2)", width: "3%" }} type="radio" onClick={display} name="24hrs" id="hrs_24" />
+              <label style={{ fontSize: "larger" }}>24hrs </label><input style={{ transform: "scale(1.2)", width: "3%" }} type="radio"   onClick={display} name="24hrs" id="hrs_24" />
               <label style={{ fontSize: "larger" }}>12hrs </label> <input style={{ transform: "scale(1.2)", width: "3%" }} type="radio" onClick={display} name="24hrs" id="hrs_12" />
 
 
@@ -219,18 +258,18 @@ e.preventDefault();
               <div ref={ref12hrs} id="clock_12" style={{ display: "none" }}>
                 <label style={{ fontSize: "125%" }}>Select a time:</label>
                 <div style={{ display: "flex" }}>
-                  <select style={{ width: "7rem" }} id="dropdownhr" name="dropdown" >
-                    <option value="0" >Hour</option>
+                  <select style={{ width: "7rem" }} id="dropdownhr" name="dropdown" onChange={addToTime} >
+                    <option value="01" >Hour</option>
                     {hr.map((option) => (
                       <option key={option} value={option}>
                         {option}
                         </option>
                     ))}
                   </select>
-                  <select style={{ width: "7rem" }} id="dropdownmin" name="dropdown">
-                    <option value="0">Minute</option>
+                  <select style={{ width: "7rem" }} id="dropdownmin" name="dropdown" onChange={addToTime}>
+                    <option value="00">Minute</option>
                     {min.map((option) => (
-                      <option key={option} value={option}
+                      <option key={option} value={option} 
                       >
                         {option}
 
@@ -238,7 +277,7 @@ e.preventDefault();
                     ))}
 
                   </select>
-                  <select style={{ width: "7rem" }} name="am-pm" id="am" onMouseOut={addToTime}>
+                  <select style={{ width: "7rem" }} name="am-pm" id="am" onChange={addToTime}>
                     <option value="am" >AM</option>
                     <option value="pm">PM</option>
                   </select>
@@ -247,8 +286,8 @@ e.preventDefault();
               
               <div class="field"><br/>
                 <label style={{ fontSize: "larger" }} htmlFor='time'>Enter Time</label>
-
-                <input type="text" name="time" id="time" value={data.time}  onChange={handleTask}  required/>
+                {showAlert && <div class="ui red message">{error}</div>}
+                <input type="text" name="time" id="time" value={data.time} onClick={()=>setShowAlert(false)} onChange={handleTask}  required/>
               </div><br />
               <Modal.Actions>
           <Button style={{ padding: "2% 5%", marginLeft:"auto",fontSize: "initial" }} color='red' type="submit">

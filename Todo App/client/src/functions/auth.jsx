@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 
 import axios from "axios";
 let cookie = new Cookies();
-const endpoint="http://192.168.1.31:3020/";
+const endpoint="http://192.168.1.43:3020/";
 export const checkAuth = async () => {
 
   if (cookie.get("session_id")) {

@@ -34,7 +34,7 @@ app.get('/health', (req, res) => {
 app.listen(3020, (req, res) => {
 
 })
-
+ 
 app.get('/getupdateddata', (req, res) => {
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -111,13 +111,13 @@ app.post('/edit', (req, res) => {
 
   console.log(req.body);
 
-  UserTasks.findByIdAndUpdate({ _id: req.body.id }, { task: req.body.task }, { new: true }, (err, data) => {
+  UserTasks.findByIdAndUpdate({ _id: req.body.id }, req.body, { new: true }, (err, data) => {
 
     if (err) {
       console.log(err);
     }
     else {
-      console.log(data);
+    
     }
   })
 
@@ -175,7 +175,6 @@ app.post('/postdata', (req, res) => {
     }
   }
   else {
-    console.log("yes")
     const user = new UserTasks(req.body);
     user.save((err, doc) => {
       err ? console.log(err) : console.log(user);

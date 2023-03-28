@@ -276,4 +276,31 @@ td{
   color: #ccc;
 }
 
+h4{
+  word-break: break-word;
+}
 
+/* .todo .header {
+  position:absolute;
+  margin-top:-81px;
+  margin-left:10px;
+  color:white;
+  background:cadetblue;
+  border-radius:10px;
+  padding:2px 10px;
+} */
+.high{
+  border-color:  red;
+  border-width: revert;
+}
+.medium{
+border-color:  orange;
+border-width: revert;
+}
+.low{
+  border-color:  blue;
+  border-width: revert;
+}
+input[type=checkbox] {
+  zoom: 1.5;
+}

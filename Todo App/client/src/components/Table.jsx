@@ -85,7 +85,7 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
           <Modal.Actions>
           
             <Button color='red' onClick={() => setOpen(false)}>
-              <Icon name='remove' /> No
+              <Icon name='remove' /> cancel
             </Button>
             <Button color='green'  onClick={() => {
               
@@ -99,7 +99,7 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
     }).then(() => setToggle(!toggleTable))
               
               }}>
-              <Icon name='checkmark' /> Yes
+              <Icon name='checkmark' /> Delete
             </Button>
           </Modal.Actions>
         </Modal>

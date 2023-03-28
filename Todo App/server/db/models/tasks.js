@@ -20,11 +20,13 @@ task:
         type:String,
         reuired:true,
     },
+    starttime:String,
+    endtime:String,
 desc:String,
 deldesc:String,
 deltime:String,
 FromStatus:String,
-date:String
+date:String,priority:String
 
 
 })

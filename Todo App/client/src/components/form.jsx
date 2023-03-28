@@ -3,14 +3,17 @@ import './style.css'
 import TableComponent from "./Table.jsx";
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
-import { Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown, Modal ,Icon} from 'semantic-ui-react';
 import background from '../images/adminpagebg.jpg'
+import Cookies from "universal-cookie"
 
 //component for admin to assign tasks 
 
 export default function Form() {
   const endpoint="http://192.168.1.43:3020/";
+  const cookie = new Cookies();
 
+  const user=cookie.get('username');
 //options for dropdown
   const [options, setOptions] = useState([]);
   //tasks assigned by admin
@@ -18,6 +21,8 @@ export default function Form() {
   const [toggleTable, setToggle] = useState(true);
   const [task, setTask] = useState("")
   const [desc, setDesc] = useState("")
+  const [priority, setPriority] = useState("low")
+
   //toggle show and hide button for table
   const [show, setdisplay] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
@@ -25,8 +30,10 @@ export default function Form() {
   //stores selected Assignees
   const [selectedOptions, setSelectedOptions] = useState([]);
 
+  const [open, setOpen] = useState(false)
   //handle selected Assignees change
   const handleChange = (event, { value }) => {
+    
     setSelectedOptions(value);
     setShowAlert(false);
   };
@@ -35,6 +42,7 @@ export default function Form() {
   const handleDescChange = (event) => {
     setDesc(event.target.value)
   };
+
   //handle task changes
   const handleInputChange = (event) => {
 
@@ -46,6 +54,7 @@ export default function Form() {
     setdisplay(prev => !prev)
 
   }
+
   //fetch Assignees to show them in the search bar to assign tasks
 
   useEffect(() => {
@@ -98,12 +107,13 @@ export default function Form() {
       setShowAlert(true);
     } 
 else{
+  setOpen(true)
     let tasks = []
     let data = {}
     selectedOptions.map((key, index) => {
 
       data["task"] = task;
-      data["status"] = "no_status";
+      data["status"] = "no status";
       const today = new Date();
       const yyyy = today.getFullYear();
       let mm = today.getMonth() + 1;   // Months start at 0!
@@ -126,6 +136,7 @@ else{
       data["username"] = key
       data["desc"] = desc;
       data["assigned"] = "true";
+      data["priority"]=priority;
       tasks.push({ ...data });
 
     })
@@ -139,7 +150,23 @@ else{
       .then(setSelectedOptions([]))
   }
   };
-  
+  function handleselchange(event)
+  {
+   setPriority(event.target.value);
+  }
+  function change() {
+    var decider = document.getElementById('assigntome');
+    if(decider.checked){
+      setSelectedOptions([...selectedOptions,user])
+    } else {
+     setSelectedOptions( selectedOptions.filter(option=>
+        {
+          if(option!==user)
+          return option;
+        }))
+        
+    }
+}
   return (
     <div style={{ background: `linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url(${background})`, backgroundRepeat: "no-repeat", backgroundSize: "cover" ,height:"100vh",marginTop:"2%"}}>
       <center >
@@ -153,6 +180,12 @@ else{
 
               <input type="text" id="task" placeholder='Assign a task' name="task" value={task} onChange={handleInputChange} required />
             </div>
+          
+            <select id="priority" onChange={handleselchange}>
+  <option value="Low" selected="selected">Low</option>
+  <option value="Medium">Medium</option>
+  <option value="High">High</option>
+</select>
             <div class="field">
               <label className='adminlabel'>Description</label>
               <input type="text" placeholder='description' name='desc' value={desc} onChange={handleDescChange} />
@@ -175,6 +208,7 @@ else{
                 />
             {showAlert && <div class="ui red message">Please select at least one option</div>}
             </div>
+          <h4> Assign to me &nbsp; <input type="checkbox" id="assigntome" name="assigntome" value={user} onClick={change}/></h4>
             <button class="ui button" style={{
               backgroundColor: "seashell",
               color: "black",
@@ -199,6 +233,23 @@ else{
         {show && <TableComponent data={adminTasks} toggleTable={toggleTable} setToggle={setToggle}/>}
 
       </center>
+      <Modal
+      // centered={false}
+      open={open}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      size='tiny'
+    >
+      <Modal.Content>
+        <Modal.Description>
+          <h3>Tasks has been assigned</h3>
+        </Modal.Description>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color='green' onClick={() => setOpen(false)}>OK</Button>
+      </Modal.Actions>
+    </Modal>
     </div>
+    
   )
 }

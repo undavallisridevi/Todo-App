@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Popup, Icon ,Dropdown} from 'semantic-ui-react'
+import { Popup, Icon ,Dropdown, Button} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios';
 import './style.css'
@@ -14,6 +14,11 @@ export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks
 
   //setstate for passing task to edit,delete  model component to edit the task
   const [editTask, setTask] = useState(null)
+  const [editDesc, setDesc] = useState(null)
+  const [editTime, setTime] = useState(null)
+  const [editStarttime, setStarttime] = useState(null)
+  const [editEndtime, setEndtime] = useState(null)
+  const [editPriority,setPriority]=useState(null)
   const [delTask,setDelTask]=useState(null)
   //to track the status of the task
   const [status, setStatus] = useState(null)
@@ -36,6 +41,22 @@ export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks
     status: "",
     id: ""
   }
+  const [openAlert, setOpenAlert] =useState(false)
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+        if (event.target.closest('.more-details') === null) {
+           setOpenAlert(false);
+        }
+    }
+
+    window.addEventListener('mousedown', handleClickOutside);
+    return () => {
+        window.removeEventListener('mousedown', handleClickOutside);
+    };
+}, [openAlert]);
+
+
 
   //styles for task
   const styleForDiv={
@@ -43,9 +64,9 @@ export default function Todo({pending, inProgressTasks,todoTasks, CompletedTasks
     justifyContent: 'space-between',
      gap:' 2rem', 
      alignItems: 'center',
-      margin: '0.3rem 1rem', 
+      // margin: '0.3rem 1rem', 
       padding: '0.5rem',
-      border: "3px solid #485ba5", 
+     
       borderRadius: "5px",
      
  }
@@ -77,7 +98,10 @@ delFromStatus= event.target.parentNode.parentNode.id;  //get status of task
 
   
   }
-
+function dragEnter(event)
+{
+  console.log(event);
+}
   function dragEnd() {
     draggableTodo = null;
   }
@@ -87,7 +111,7 @@ delFromStatus= event.target.parentNode.parentNode.id;  //get status of task
 
     event.preventDefault();
   }
-  
+ 
 
   
   function dragDrop(event) {
@@ -137,9 +161,9 @@ setDeletedToggle (!deletedbtn)
 
   const getOptionStyle = (option) => {
     if (selectedOptions.includes(option)) {
-      return { backgroundColor: '#6785b2', color: 'white' }; // set selected option style
+      return { backgroundColor: 'white', color: 'black' }; // set selected option style
     }
-    return {}; // use default style for non-selected options
+    return {backgroundColor: '#6785b2', color: 'white'}; // use default style for non-selected options
   };
 
   useEffect(() => { }, [itemID, modalVisibility])
@@ -147,21 +171,24 @@ setDeletedToggle (!deletedbtn)
   useEffect(() => { setVisibility(null)}, [])
 
 
-  const handleAction = (e) => {
-    
-    
-    setID(itemID => itemID = e.target.parentNode.parentNode.id);
-    setTask(editTask => editTask = e.target.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].innerHTML)
+  const handleAction = (id1,task1,desc1,time,priority1,starttime1,endtime1) => {
+    console.log("edit");
+    setID(itemID => itemID = id1);
+    setTask(editTask => editTask = task1)
+setDesc(editDesc=>editDesc=desc1)
+setPriority(editPriority=>editPriority=priority1)
+setTime(editTime=>editTime=time)
+setStarttime(starttime1);
+setEndtime(endtime1);
     setVisibility(true);
   };
  
-  const handleDeleteAction = (e) => {
-    
-    
-     if(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id==="deleted")
+  const handleDeleteAction = (statusOfTask,id,task) => {
+    console.log("del");
+     if(statusOfTask==="deleted")
      {
-      setID(itemID => itemID = e.target.parentNode.parentNode.id);
-      setDelTask(delTask => delTask = e.target.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].innerHTML)
+      setID(itemID => itemID = id);
+      setDelTask(delTask => delTask = task)
 
      
      
@@ -171,15 +198,27 @@ setDeletedToggle (!deletedbtn)
     
      }
      else{
-      setStatus( status=>status=e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id);
-      setID(itemID => itemID = e.target.parentNode.parentNode.id);
+      setStatus( status=>status=statusOfTask);
+      setID(itemID => itemID =id);
     
        setdelVisibility(true);
      }
   };
+  function dragEnter(event) {
+    event.preventDefault(); // prevent default behavior of browser when item is dragged over a droppable area
+    const target = event.target;
+    if (target.className === 'tasks') { // make sure the target is the droppable area
+      target.style.border = '2px solid #000'; // add a dashed border to highlight the area
+       }
+  }
+  function dragLeave(event) {
+    event.preventDefault(); // prevent default behavior of browser when item is dragged over a droppable area
+    const target = event.target;
+    if (target.className === 'tasks') { // make sure the target is the droppable area
+      target.style.border = 'none'; // add a dashed border to highlight the area
 
- 
-
+    }
+  }
   return (
 
     <>
@@ -197,109 +236,145 @@ setDeletedToggle (!deletedbtn)
    
     
       <div className="wrap" style={{ display: 'flex' ,gap:"0.5rem"}}>
-      <div className="status"  onDragOver={dragOver}  onDrop="return false" id="no_status"  >
-          <h1 style={{position:"absolute"}}id="Todo" onDrop="return false">Todo</h1>
-          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} onDragOver={dragOver}  onDrop="return false" id="no_status" >
+      <div className="status"  onDragOver={dragOver}  onDrop={()=>{
+   setOpenAlert(true);
+return false;
+    } }id="no_status"  >
+          <h1 style={{position:"absolute"}}id="Todo" onDrop={()=>{return false}}>Todo</h1>
+
+          <div className='tasks'  style={{marginTop:"50px",overflowY: "auto",height:"400px"}} onDragOver={dragOver}  onDrop={()=>{ setOpenAlert(true); return false;} }  id="no_status" >
+         
           {todoTasks.map(task => (
-            <div key={task._id} className="todo" id={task._id} draggable="true" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} onDrop="return false" onDragOver="return false" style={styleForDiv} >
+            <fieldset  className={task.priority==="High"? " high todo": (task.priority==="Medium"? "medium todo":" low todo")} key={task._id}  id={task._id} draggable="true" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} onDrop="return false" onDragOver="return false" style={styleForDiv} >
+              <legend>{task.priority}</legend>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
            { task.desc!==" "&&task.desc!==""  ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter( task.task)}</h4>} /> :<h4> {capitalizeFirstLetter( task.task)}</h4>}
-                <p> {task.time} </p>
+           
+           {task.time!==" " &&task.time!=="" &&task.time!=undefined ?<p style={{ width:" max-content"}}>Time: {task.time} </p>:<></> }
+             {task.starttime!==" " &&task.starttime!=="" &&task.starttime!=undefined ?<p>StartTime:{task.starttime}</p>:<></> }
+             {task.endtime!==" " &&task.endtime!=="" &&task.endtime!=undefined ?<p>End Time:{task.endtime}</p>:<></> }
 
               </div>
+       
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: ' 1rem' }} id={task._id}>
 
 
 
-                <p onClick={handleAction}><Icon name="edit outline"></Icon> </p>
-                <p onClick={handleDeleteAction} ><Icon name="trash"></Icon></p>
+                <p id={task._id} onClick={()=>handleAction(task._id,task.task,task.desc,task.time,task.priority,task.starttime,task.endtime)}><Icon name="edit outline"></Icon> </p>
+                <p  onClick={()=>handleDeleteAction("no_status",task._id,task.task)} ><Icon name="trash"></Icon></p>
 
               </div>
-            </div>
+            </fieldset>
           ))
           }</div>
           </div>
-    { pendingbtn &&  <div className="status"  onDragOver={dragOver}  onDrop={dragDrop} id="pending" >
+    { pendingbtn &&  <div className="status"  onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave}  onDrop={dragDrop} id="pending" >
           <h1 style={{position:"absolute"}} id="pendingtasks" onDrop="return false">Pending</h1>
-          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}}  onDragOver={dragOver}  onDrop={dragDrop} id="pending"  >
+          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} onDragEnter={dragEnter} onDragLeave={dragLeave} onDragOver={dragOver}  onDrop={dragDrop} id="pending"  >
           {pending.map(task => (
-            <div key={task._id} className="todo" id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} style={styleForDiv}>
+            <fieldset key={task._id} className={task.priority==="High"? " high todo": (task.priority==="Medium"? "medium todo":" low todo")} id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} style={styleForDiv}>
+              <legend>{task.priority}</legend>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
               { task.desc!==" "&&task.desc!==""  ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter( task.task)}</h4>} /> :<h4> {capitalizeFirstLetter( task.task)} </h4>}
-                <p> {task.time} </p>
+           {task.time!==" " &&task.time!=="" &&task.time!=undefined ?<p style={{ width:" max-content"}}>Time: {task.time} </p>:<></> }
+             
+             
+              {task.starttime!==" " &&task.starttime!=="" &&task.starttime!=undefined ?<p>StartTime:{task.starttime}</p>:<></> }
+              {task.endtime!==" " &&task.endtime!=="" &&task.endtime!=undefined ?<p>End Time:{task.endtime}</p>:<></> }
+
 
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: ' 1rem' }} id={task._id}>
 
 
 
-                <p onClick={handleAction}><Icon name="edit outline"></Icon> </p>
-                <p onClick={handleDeleteAction} ><Icon name="trash"></Icon></p>
+              <p id={task._id} onClick={()=>handleAction(task._id,task.task,task.desc,task.time,task.priority,task.starttime,task.endtime)}><Icon name="edit outline"></Icon> </p>
+                
+               
+              <p  onClick={()=>handleDeleteAction("pending",task._id,task.task)} ><Icon name="trash"></Icon></p>
 
               </div>
-            </div>
+            </fieldset>
           ))
           }
 </div>
         </div>}
-       {progressbtn && <div className="status" id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop}  >
+       {progressbtn && <div className="status" id="inprogress" onDragEnter={dragEnter} onDragOver={dragOver} onDragLeave={dragLeave} onDrop={dragDrop}  >
           <h1 style={{position:"absolute"}} id="progresstasks" onDrop="return false">Progress</h1>
-          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="inprogress"  onDragOver={dragOver}  onDrop={dragDrop}>
+          <div className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="inprogress"  onDragLeave={dragLeave} onDragEnter={dragEnter} onDragOver={dragOver}  onDrop={dragDrop}>
           {inProgressTasks.map(task => (
-            <div key={task._id} className="todo" id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+            <fieldset key={task._id} className={task.priority==="High"? " high todo": (task.priority==="Medium"? "medium todo":" low todo")} id={task._id} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+              <legend>{task.priority}</legend>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
               { task.desc!==" "&&task.desc!==""  ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter( task.task)}</h4>} /> :<h4> {capitalizeFirstLetter( task.task)} </h4>}
-                <p> {task.time} </p>
-
+           {task.time!==" " &&task.time!=="" &&task.time!=undefined ?<p style={{ width:" max-content"}}>Time: {task.time} </p>:<></> }
+             
+  
+              {task.starttime!==" " &&task.starttime!=="" &&task.starttime!=undefined ?<p>StartTime:{task.starttime}</p>:<></> }
+              {task.endtime!==" " &&task.endtime!=="" &&task.endtime!=undefined ?<p>End Time:{task.endtime}</p>:<></> }
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: ' 0.5rem' }} id={task._id}>
 
 
 
-                <p onClick={handleAction}><Icon name="edit outline"></Icon> </p>
-                <p onClick={handleDeleteAction}><Icon name="trash"></Icon></p>
+              <p id={task._id} onClick={()=>handleAction(task._id,task.task,task.desc,task.time,task.priority,task.starttime,task.endtime)}><Icon name="edit outline"></Icon> </p>
+               
+                
+              <p  onClick={()=>handleDeleteAction("inprogress",task._id,task.task)} ><Icon name="trash"></Icon></p>
 
               </div>
-            </div>
+            </fieldset>
           ))
           }
 </div>
         </div>}
-       {completedbtn && <div className="status" id="completed"  onDragOver={dragOver}  onDrop={dragDrop} >
+       {completedbtn && <div className="status" id="completed" onDragEnter={dragEnter}  onDragLeave={dragLeave} onDragOver={dragOver}  onDrop={dragDrop} >
           <h1  style={{position:"absolute"}} id="completedtasks" onDrop="return false">Completed</h1>
-          <div style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="completed" className='tasks' onDragOver={dragOver}  onDrop={dragDrop} >
+          <div style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="completed" className='tasks' onDragLeave={dragLeave} onDragEnter={dragEnter}  onDragOver={dragOver}  onDrop={dragDrop} >
           {CompletedTasks.map(task => (
-            <div key={task._id} id={task._id} className="todo" draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+            <fieldset key={task._id} id={task._id} className={task.priority==="High"? " high todo": (task.priority==="Medium"? "medium todo":" low todo")} draggable="true"  onDrop="return false" onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+              <legend>{task.priority}</legend>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
               { task.desc!==" "&&task.desc!==""  ? <Popup content={task.desc} trigger={<h4>  {capitalizeFirstLetter( task.task)}</h4>} /> :<h4> {capitalizeFirstLetter( task.task)} </h4>}
-                <p> {task.time} </p>
-
+           {task.time!==" " &&task.time!=="" &&task.time!=undefined ?<p style={{ width:" max-content"}}>Time: {task.time} </p>:<></> }
+             
+  
+              {task.starttime!==" " &&task.starttime!=="" &&task.starttime!=undefined ?<p>StartTime:{task.starttime}</p>:<></> }
+              {task.endtime!==" " &&task.endtime!=="" &&task.endtime!=undefined ?<p>End Time:{task.endtime}</p>:<></> }
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: ' 1rem' }} id={task._id}>
 
 
 
-                <p onClick={handleAction}><Icon name="edit outline"></Icon> </p>
-                <p onClick={handleDeleteAction} ><Icon name="trash"></Icon></p>
+              <p id={task._id} onClick={()=>handleAction(task._id,task.task,task.desc,task.time,task.priority,task.starttime,task.endtime)}><Icon name="edit outline"></Icon> </p>
+                
+               
+                
+                <p  onClick={()=>handleDeleteAction("completed",task._id,task.task)} ><Icon name="trash"></Icon></p>
+
 
               </div>
-            </div>
+            </fieldset>
           ))
           }
           </div>
         </div>}
 
-      {deletedbtn &&  <div className="status del" id="deleted"  onDragOver={dragOver} onDrop={dragDrop} >
+      {deletedbtn &&  <div className="status del" id="deleted"  onDragEnter={dragEnter}onDragLeave={dragLeave}  onDragOver={dragOver} onDrop={dragDrop} >
           <h1 style={{position:"absolute"}}id="deletedtasks" onDrop="return false">Deleted</h1>
-          <div  className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="deleted"  onDragOver={dragOver} onDrop={dragDrop} >
+          <div  className='tasks' style={{marginTop:"50px",overflowY: "auto",height:"400px"}} id="deleted" onDragLeave={dragLeave} onDragEnter={dragEnter}  onDragOver={dragOver} onDrop={dragDrop} >
           &nbsp;&nbsp;<button class="ui primary button" style={{backgroundColor:"blue",fontSize:"initial"}} id="show" onDrop="return false" onClick={display}>show</button>
           {deletedTasks.map(task => (
-            <div key={task._id} id={task._id} className="todo" draggable="true"  onDrop="return false" onDragOver="return false"  onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+            <fieldset key={task._id} id={task._id} className={task.priority==="High"? " high todo": (task.priority==="Medium"? "medium todo":" low todo")} draggable="true"  onDrop="return false" onDragOver="return false"  onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+              <legend>{task.priority}</legend>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
                
               { task.desc!==" "&&task.desc!==""  ? <Popup content={task.desc} trigger={<h4>  {capitalizeFirstLetter( task.task)}</h4>} /> :<h4>  {capitalizeFirstLetter( task.task)} </h4>}
-                <p> {task.time} </p>
-
+           {task.time!==" " &&task.time!=="" &&task.time!=undefined ?<p style={{ width:" max-content"}}>Time: {task.time} </p>:<></> }
+             
+  
+              {task.starttime!==" " &&task.starttime!=="" &&task.starttime!=undefined ?<p>StartTime:{task.starttime}</p>:<></> }
+              {task.endtime!==" " &&task.endtime!=="" &&task.endtime!=undefined ?<p>End Time:{task.endtime}</p>:<></> }
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: ' 1rem' }} id={task._id}>
 
@@ -325,11 +400,12 @@ setDeletedToggle (!deletedbtn)
 </p>
 
 
-                <p onClick={handleAction}><Icon name="edit outline"></Icon> </p>
-                <p onClick={handleDeleteAction} ><Icon name="trash"></Icon></p>
+<p id={task._id} onClick={()=>handleAction(task._id,task.task,task.desc,task.time,task.priority,task.starttime,task.endtime)}><Icon name="edit outline"></Icon> </p>
+                
+                <p  onClick={()=>handleDeleteAction("deleted",task._id,task.task)} ><Icon name="trash"></Icon></p>
 
               </div>
-            </div>
+            </fieldset>
           ))
           }
           
@@ -348,6 +424,11 @@ setDeletedToggle (!deletedbtn)
             setVisibility={setVisibility}
             id={itemID}
             task={editTask}
+            desc={editDesc}
+            time={editTime}
+            priority={editPriority}
+starttime={editStarttime}
+endtime={editEndtime}
             getalltasks = {getalltasks}
             flag={flag}
             setFlag = {setFlag}
@@ -384,6 +465,23 @@ setDeletedToggle (!deletedbtn)
           />
         )}
       </div>
+      <div className={openAlert ? "overlay active" : "overlay"}>
+        { (
+        
+        <div className="more-details"  style={{width:"33%"}}>
+        <span className="close-button">
+        </span>
+        <h3>You cannot place your Task here</h3>
+        <hr  style={{    color: "black",width: "-webkit-fill-available",border:"1px solid black"}}/>
+        <span style={{    marginLeft: "auto"}}>
+        <Button color='green' onClick={()=>setOpenAlert(false)}>Ok</Button>&nbsp;
+       </span>
+       
+       </div>
+        
+        )}
+      </div>
+ 
     </>
   )
 }

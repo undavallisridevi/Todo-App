@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Dropdown, Icon, Menu } from 'semantic-ui-react'
 import Cookies from 'universal-cookie';
 import { logout } from '../functions/auth';
@@ -12,7 +12,7 @@ export default function Navbar() {
   const username = cookie.get("username");
   const dispatcher = useDispatch();
     const navigate = useNavigate();
-    const [activeItem, setActiveItem] = useState("home")
+    const [activeItem, setActiveItem] = useState("")
     const [isAdmin, setIsAdmin] = useState(cookie.get("admin") === "true");
    
 useEffect(() => {
@@ -38,21 +38,17 @@ useEffect(() => {
                     <Menu.Item
                         name='home'
                         active={activeItem === 'home'}
-                        as={Link}
+                        as={NavLink}
                         to=""
-                        exact="true"
                         onClick={handleItemClick}
-                       className={activeItem === 'home' ? 'active-link' : ''}
                     />
   
                     <Menu.Item
                         name='Assign Task'
-                        as={Link}
+                        as={NavLink}
                         active={activeItem === 'Assign Task'}
                         to="/admin"
-                        exact="true"
                         onClick={handleItemClick}
-                         className={activeItem === 'Assign Task' ? 'active-link' : ''}
                     />
                    
                     <Menu.Menu position="right">
@@ -78,7 +74,7 @@ useEffect(() => {
                      <Menu.Item
                         name='home'
                         active={activeItem === 'home'}
-                        as={Link}
+                        as={NavLink}
                         to=""
                         onClick={handleItemClick}
                     />
@@ -94,7 +90,7 @@ useEffect(() => {
                         name='Login'
                         position='right'
                         active={activeItem === 'Login'}
-                        as={Link}
+                        as={NavLink}
                         to="/login"
                         onClick={handleItemClick}
                     />

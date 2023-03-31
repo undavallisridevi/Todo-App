@@ -9,15 +9,12 @@ const DelPermanentModal = ({
   id,
   task,
   getalltasks,
-  flag,
-  setFlag
-  
+ 
  
 }) => {
   const endpoint="http://192.168.1.43:3020/";
 
   const handleHide = (e) => {
-    setFlag(!flag);
     setdelPermanentVisibility(!visibility);
    
   };
@@ -32,7 +29,7 @@ const DelPermanentModal = ({
     return () => {
         window.removeEventListener('mousedown', handleClickOutside);
     };
-}, [setdelPermanentVisibility]);
+},[visibility]);
 
   function delPermanent() {
     let data = {
@@ -44,7 +41,6 @@ const DelPermanentModal = ({
       }).then(()=>
     {
         setdelPermanentVisibility (!visibility)
-     setFlag(!flag)
   }).then(getalltasks)
     
 }

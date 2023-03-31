@@ -1,6 +1,6 @@
-.del .todo {
+ .del  .todo {
   display: none !important;
-}
+} 
 
 .more-details {
   background: #f4f4f4;
@@ -94,7 +94,8 @@ margin-left: 5vh;
 
 
 .status {display: inline-block; text-align: left; width: 18%; margin-right: 1%;
-max-height: 60%; }
+max-height: 60%;
+align-items: center; }
 .container{
   background: linear-gradient(skyblue,white);
 
@@ -168,6 +169,7 @@ font-size: medium !important;
   color:black;
   background:#c3c3db ;
   font-size: initial !important;
+  display: flex !important;
 }
 .popup-heading {
   font-weight: bold;
@@ -280,15 +282,7 @@ h4{
   word-break: break-word;
 }
 
-/* .todo .header {
-  position:absolute;
-  margin-top:-81px;
-  margin-left:10px;
-  color:white;
-  background:cadetblue;
-  border-radius:10px;
-  padding:2px 10px;
-} */
+
 .high{
   border-color:  red;
   border-width: revert;
@@ -304,3 +298,29 @@ border-width: revert;
 input[type=checkbox] {
   zoom: 1.5;
 }
+
+
+
+.todo {
+
+
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+}
+
+
+.todo legend {
+ 
+  margin-bottom: 10px;
+}
+
+
+
+
+
+.todo div div p {
+  cursor: pointer;
+  margin: 0;
+}
+
+

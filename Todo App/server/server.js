@@ -131,7 +131,6 @@ app.post('/edit', (req, res) => {
 app.post('/updatestatus', (req, res) => {
 
 
-  console.log(req.body);
   if (req.body.status !== "deleted") {
     UserTasks.updateOne({ _id: req.body.id }, { $unset: { "FromStatus": 1, "deltime": 1, "deldesc": 1 }, $set: { status: req.body.status } }, (err, data) => {
       if (err) {
@@ -162,7 +161,6 @@ app.post('/updatestatus', (req, res) => {
 
 app.post('/postdata', (req, res) => {
 
-  console.log(req.body);
   if (Array.isArray(req.body)) {
 
     for (var i in req.body) {
@@ -211,7 +209,6 @@ app.post("/auth", (req, res) => {
       }
     )
     .then((response) => {
-      console.log(response.data);
       res.status(200).send(response.data);
     })
     .catch((err) => {

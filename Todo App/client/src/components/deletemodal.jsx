@@ -9,8 +9,7 @@ const DeleteModal = ({
   id,
   status,
   getalltasks,
-  flag,
-  setFlag
+
   
  
 }) => {
@@ -24,13 +23,14 @@ const DeleteModal = ({
     }
 
     window.addEventListener('mousedown', handleClickOutside);
+
     return () => {
         window.removeEventListener('mousedown', handleClickOutside);
     };
-}, [setdelVisibility]);
+}, [visibility]);
   const handleHide = (e) => {
     setDesc(" ");
-    setFlag(!flag);
+  
     setdelVisibility(!visibility);
    
   };
@@ -53,7 +53,7 @@ const DeleteModal = ({
       headers: { "Content-Type": "application/json" }
     }).then(()=>
     {
-     setFlag(!flag)
+   
       setdelVisibility(!visibility)
     setDesc('');
   }).then(getalltasks)

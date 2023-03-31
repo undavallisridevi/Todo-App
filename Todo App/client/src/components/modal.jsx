@@ -7,7 +7,6 @@ import Cookies from "universal-cookie"
 import './style.css'
 
 
-
 function ModalDisplay() {
   const endpoint="http://192.168.1.43:3020/";
   
@@ -16,7 +15,7 @@ function ModalDisplay() {
 
    const user=cookie.get('username');
 
-  
+  //to store task details
   const [data, setdata] = useState({
     task:"",
     time:"", desc:"",
@@ -24,23 +23,30 @@ function ModalDisplay() {
     endtime:"",
     priority:"Low"
   })
-  console.log(data);
-  const [flag, setflag] = useState(false)
+  //to set all tasks
   const [tasks, setTasks] = useState([])
+  //open modal to enter task
   const [open, setOpen] = useState(false)
+
+//handle check and uncheck of checkboxes
  const [radioBtn24,set24]=useState(false);
  const [radioBtn12,set12]=useState(false);
 
+//to display 24hrs and 12hrs input
   const ref24hrs=useRef(null)
   const ref12hrs=useRef(null)
+
   const [showAlert, setShowAlert] = useState(false);
 const [error,setError]=useState('')
+const [start,setstart]=useState("")
+const [startflag,setstartflag]=useState(false);
+const [end,setend]=useState("")
+const [endflag,setendflag]=useState(false);
 
   useEffect(() => {
     gettasks()
   }, [])
 
-  useEffect(() => { }, [tasks, flag])
 
    //function to fetch tasks and filter them w.r.t user
   function gettasks() {
@@ -52,22 +58,32 @@ const [error,setError]=useState('')
             return ele;
         })
         setTasks(alltasks);
-        // setflag(!flag)
       })
   }
+function compare(a,b)
+{
+  if (a.priority === 'High') {
+    return -1;
+  } else if (b.priority === 'High') {
+    return 1;
+  } else if (a.priority === 'Medium') {
+    return -1;
+  } else if (b.priority === 'Medium') {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
   
   
-  const pending = (tasks.filter(task => task.status === "pending"))
-  const inProgressTasks = (tasks.filter(task => task.status === "inprogress"))
-  const CompletedTasks = (tasks.filter(task => task.status === "completed"))
-  const deletedTasks = (tasks.filter(task => task.status === "deleted"))
-  const todoTasks = (tasks.filter(task => task.status === "no status"))
+  const pending = (tasks.filter(task => task.status === "pending")).sort((a,b)=>compare(a,b));
+  const inProgressTasks = (tasks.filter(task => task.status === "inprogress")).sort((a,b)=>compare(a,b));
+  const CompletedTasks = (tasks.filter(task => task.status === "completed")).sort((a,b)=>compare(a,b));
+  const deletedTasks = (tasks.filter(task => task.status === "deleted")).sort((a,b)=>compare(a,b));
+  const todoTasks = (tasks.filter(task => task.status === "no status")).sort((a,b)=>compare(a,b));
   
- const [start,setstart]=useState("")
- const [startflag,setstartfalg]=useState(false);
- const [end,setend]=useState("")
- const [endflag,setendfalg]=useState(false);
+ 
   //min array to map the options in minutes for time
   const min = Array.from({ length: 60 }, (value, index) => {
     if (index < 10) {
@@ -113,7 +129,7 @@ const [error,setError]=useState('')
     if (timeFormat === "hrs_24" ) {
       if(!radioBtn24)
       {
-        console.log("24true");
+       
         set24(true);
         set12(false);
       setdata((prev) => {
@@ -131,7 +147,6 @@ const [error,setError]=useState('')
     }
   else{
     set24(false);
-    console.log("24false");
     event.target.checked=false;
     ref24hrs.current.style.display="none";
   }}
@@ -184,7 +199,7 @@ e.preventDefault();
     setShowAlert(true);
     return;
   }
-if(data.time!==" " &&data.time!=='' && data.time!=undefined)
+if(data.time!==" " &&data.time!=='' && data.time!==undefined)
 {
   const match = data.time.match(timePattern);
 
@@ -235,7 +250,7 @@ if(ref24hrs.current.style.display==="block")
 {
   if (!match24) {
     setstart("HH:MM");
-    setstartfalg(true);
+    setstartflag(true);
     return;
   }
 
@@ -244,7 +259,7 @@ else if(ref12hrs.current.style.display==="block")
 {
   if (!match12) {
     setstart("HH:MM AM/PM");
-    setstartfalg(true);
+    setstartflag(true);
     return;
   }
 
@@ -253,7 +268,7 @@ else{
   
   if (!match) {
     setstart("enter time format in HH:MM or HH:MM AM/PM")
-    setstartfalg(true);
+    setstartflag(true);
     return; // invalid hour range for either format
   }
 
@@ -273,7 +288,7 @@ if(ref24hrs.current.style.display==="block")
 {
   if (!match24) {
     setend("HH:MM");
-    setendfalg(true);
+    setendflag(true);
     return;
   }
 
@@ -282,7 +297,7 @@ else if(ref12hrs.current.style.display==="block")
 {
   if (!match12) {
     setend("HH:MM AM/PM");
-    setendfalg(true);
+    setendflag(true);
     return;
   }
 
@@ -291,7 +306,7 @@ else{
   
   if (!match) {
     setend("enter time format in HH:MM or HH:MM AM/PM")
-    setendfalg(true);
+    setendflag(true);
     return; // invalid hour range for either format
   }
 
@@ -340,6 +355,7 @@ arr["priority"]=data.priority;
 
   return (
     <div className='container' >
+      
       <Modal
         closeIcon
         open={open}
@@ -370,7 +386,7 @@ arr["priority"]=data.priority;
               <div class="field">
                 <label htmlFor='task' style={{ fontSize: "larger" }}>Task</label>
 
-                <input type="text" name="task" id='task' value={data.task} onChange={handleTask}  required/>
+                <input type="text" name="task" id='task' value={data.task} onChange={handleTask}  required pattern=".*\S.*" title="This field is required"/>
               </div>
               <label htmlFor='priority' style={{ fontSize: "larger" }}>Priority</label>
 
@@ -402,7 +418,7 @@ arr["priority"]=data.priority;
                         </option>
                     ))}
                   </select>
-                  <select style={{ width: "7rem" }} id="dropdownmin" name="dropdown" onChange={addToTime}>
+                  <select  style={{ width: "7rem", position: "relative", top: "auto",bottom:"100%" }} id="dropdownmin" name="dropdown" onChange={addToTime}>
                     <option value="00">Minute</option>
                     {min.map((option) => (
                       <option key={option} value={option} 
@@ -423,10 +439,10 @@ arr["priority"]=data.priority;
               <div class="field"><br/>
               <label style={{ fontSize: "larger" }} >Start time</label>
               {startflag && <div class="ui red message">{start}</div>}
-              <input type="text" name="starttime" id="starttime" value={data.starttime}  onClick={()=>setstartfalg(false)} onChange={handleTask}></input>
+              <input type="text" name="starttime" id="starttime" value={data.starttime}  onClick={()=>setstartflag(false)} onChange={handleTask}></input>
               <label style={{ fontSize: "larger" }} >End time</label>
               {endflag && <div class="ui red message">{end}</div>}
-              <input type="text" name="endtime" id="endtime" value={data.endtime} onClick={()=>setendfalg(false)} onChange={handleTask}></input>
+              <input type="text" name="endtime" id="endtime" value={data.endtime} onClick={()=>setendflag(false)} onChange={handleTask}></input>
                 <label style={{ fontSize: "larger" }} htmlFor='time'>Enter Time</label>
                 {showAlert && <div class="ui red message">{error}</div>}
                 <input type="text" name="time" id="time" value={data.time} onClick={()=>setShowAlert(false)} onChange={handleTask}  />
@@ -446,7 +462,7 @@ arr["priority"]=data.priority;
       </Modal>
 
 
-      <Todo pending={pending} inProgressTasks={inProgressTasks} todoTasks={todoTasks} CompletedTasks={CompletedTasks} deletedTasks={deletedTasks} getalltasks={gettasks} flag={flag} setFlag={setflag} />
+      <Todo pending={pending} inProgressTasks={inProgressTasks} todoTasks={todoTasks} CompletedTasks={CompletedTasks} deletedTasks={deletedTasks} getalltasks={gettasks}  />
 
     </div>
   )

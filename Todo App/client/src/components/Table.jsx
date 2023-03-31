@@ -12,14 +12,15 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
   const [activePage, setActivePage] = useState(1);
   const [id,setId]=useState('')
   const itemsPerPage = 5;
-
+ 
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
-  }
-
+ 
+      
+      }
   const indexOfLastItem = activePage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems =  data.slice(indexOfFirstItem, indexOfLastItem);
  
   const TableRows =
     currentItems.map((info, index) => {
@@ -42,7 +43,8 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
     });
 
   return (
-    <div class="table-wrapper" style={{margin:"1rem"}}>
+    <div className="table-wrapper" style={{margin:"1rem"}}>
+      
       <Table striped>
         <Table.Header style={{fontSize: "large"}}>
           <Table.Row>
@@ -84,16 +86,17 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
           </Modal.Content>
           <Modal.Actions>
           
-            <Button color='red' onClick={() => setOpen(false)}>
+            <Button color='green' onClick={() => setOpen(false)}>
               <Icon name='remove' /> cancel
             </Button>
-            <Button color='green'  onClick={() => {
+            <Button color='red'  onClick={() => {
               
               
               setOpen(false)
               let data = {
       id: id
     }
+    
     axios.post(endpoint + "delete", data, {
       headers: { "Content-Type": "application/json" }
     }).then(() => setToggle(!toggleTable))

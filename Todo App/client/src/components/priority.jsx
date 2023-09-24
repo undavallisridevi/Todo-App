@@ -4,7 +4,9 @@ import Cookies from 'universal-cookie';
 import './style.css'
 
 export default function Priority() {
-  const endpoint = "http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
+
+  
   const cookie = new Cookies();
 
   const user=cookie.get('username');

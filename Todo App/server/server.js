@@ -20,21 +20,26 @@ db.once('open', function () {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  res.status(200).send(OK);
+});
+
+app.get('/dbhealth', (req, res) => {
   if (mongoose.connection.readyState === 1) {
-    res.json({ DBstatus: 'UP', ServerStatus: 'Healthy' });
+    res.status(200).json({ DBstatus: 'UP', ServerStatus: 'Healthy' });
   } else {
     res.status(500).json({ DBstatus: 'DOWN', ServerStatus: 'Healthy' });
   }
 });
 
 
+const port = process.env.PORT || 3020;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
 
 
-app.listen(3020, (req, res) => {
-
-})
- 
 app.get('/getupdateddata', (req, res) => {
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -60,7 +65,7 @@ app.get('/getupdateddata', (req, res) => {
 
       }
       else {
-        console.log(data);
+        
       }
     }
   )
@@ -117,6 +122,7 @@ app.post('/edit', (req, res) => {
       console.log(err);
     }
     else {
+      console.log(data)
     
     }
   })
@@ -187,9 +193,9 @@ app.post('/postdata', (req, res) => {
 //admin tasks assignment
 app.get("/alltasks", (req, res) => {
 
-  let AdminAssignedTask
   UserTasks.find({ assigned: true }, (err, data) => {
     err ? console.log(err) : res.send(data);
+    
   });
 })
 

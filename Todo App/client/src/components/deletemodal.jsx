@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import './style.css'
 import { Button } from "semantic-ui-react";
-
 const DeleteModal = ({
   setdelVisibility,
   visibility,
   id,
   status,
   getalltasks,
-
   
- 
+  
+  
 }) => {
   const [description, setDesc] = useState('')
-  const endpoint="http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
+ 
   useEffect(() => {
     function handleClickOutside(event) {
         if (event.target.closest('.more-details') === null) {

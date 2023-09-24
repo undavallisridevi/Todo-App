@@ -10,7 +10,7 @@ import Cookies from "universal-cookie"
 //component for admin to assign tasks 
 
 export default function Form() {
-  const endpoint = "http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
   const cookie = new Cookies();
 
   const user = cookie.get('username');

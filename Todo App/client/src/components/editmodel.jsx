@@ -17,7 +17,7 @@ const Modal = ({
   starttime,
   endtime
 }) => {
-  const endpoint = "http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
    const options= [
     {key:"Low" ,value:'Low', text:'Low'},
     {key:"Medium",value:'Medium', text:'Medium'},

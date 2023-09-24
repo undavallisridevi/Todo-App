@@ -8,7 +8,7 @@ import './style.css'
 
 
 function ModalDisplay() {
-  const endpoint="http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
   
   //get username using cookie
   const cookie = new Cookies();

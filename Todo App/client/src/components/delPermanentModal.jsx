@@ -9,11 +9,11 @@ const DelPermanentModal = ({
   id,
   task,
   getalltasks,
- 
- 
+  
+  
 }) => {
-  const endpoint="http://localhost:3020/";
-
+  const endpoint = process.env.REACT_APP_ENDPOINT;
+  
   const handleHide = (e) => {
     setdelPermanentVisibility(!visibility);
    

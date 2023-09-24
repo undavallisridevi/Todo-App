@@ -1,23 +1,24 @@
 
 
 const mongoose=require('mongoose')
-const uri = 'mongodb://127.0.0.1:27017/todo'
+const uri = 'mongodb+srv://Sridevi:Sridevi33@cluster0.ftigaci.mongodb.net/Todo?retryWrites=true&w=majority'
 const connectdb = async()=>{
     try{
-const con= await mongoose.connect(uri,{
+ mongoose.connect(uri,{
     useNewUrlParser:true,
    
    
     useUnifiedTopology: true,
     
-   
+    
 });
 
+console.log("Mongo Db Connected");
 
-console.log(`Mongo Db Connected: ${con.connection.host}`);
 }
 catch(err){
     console.log(err);
 }
 }
+
 module.exports=connectdb

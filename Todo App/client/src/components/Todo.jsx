@@ -7,7 +7,7 @@ import Modal from './editmodel';
 import DeleteModal from './deletemodal';
 import DelPermanentModal from './delPermanentModal';
 export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTasks, deletedTasks, getalltasks }) {
-  const endpoint = "http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
 
   //to display modal only if taskid is not  null
   const [itemID, setID] = useState(null)

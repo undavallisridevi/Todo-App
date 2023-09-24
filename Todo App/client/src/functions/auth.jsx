@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 
 import axios from "axios";
 let cookie = new Cookies();
-const endpoint="http://localhost:3020/";
+const endpoint=process.env.REACT_APP_ENDPOINT;
 export const checkAuth = async () => {
 
   if (cookie.get("session_id")) {

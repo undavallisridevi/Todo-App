@@ -8,13 +8,14 @@ import Cookies from "universal-cookie";
 export default function Auth() {
   const dispatcher = useDispatch();
   const navigate = useNavigate();
+  const endpoint = process.env.REACT_APP_ENDPOINT;
   const cookie = new Cookies();
   const server = "https://backflipt-accounts.onrender.com";
   useEffect(() => {
     if (cookie.get("session_id")) {
       axios
         .post(
-          "http://localhost:3020/auth",
+          endpoint+"auth",
           { session_id: cookie.get("session_id") },
           {
             headers: { "Content-Type": "application/json" },

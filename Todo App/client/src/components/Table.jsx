@@ -7,7 +7,7 @@ import Pagination from 'react-js-pagination';
 import './style.css';
 
 export default function TableComponent({ data, setToggle, toggleTable }) {
-  const endpoint = "http://localhost:3020/";
+  const endpoint = process.env.REACT_APP_ENDPOINT;
   const [open, setOpen] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [id,setId]=useState('')

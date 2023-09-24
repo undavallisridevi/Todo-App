@@ -1,7 +1,7 @@
 
 
 const mongoose=require('mongoose')
-const uri = 'mongodb+srv://Sridevi:Sridevi33@cluster0.ftigaci.mongodb.net/Todo?retryWrites=true&w=majority'
+const uri = process.env.MONGO_URI;
 const connectdb = async()=>{
     try{
  mongoose.connect(uri,{

@@ -7,7 +7,7 @@ import Pagination from 'react-js-pagination';
 import './style.css';
 
 export default function TableComponent({ data, setToggle, toggleTable }) {
-  const endpoint = "http://192.168.1.43:3020/";
+  const endpoint = "http://localhost:3020/";
   const [open, setOpen] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [id,setId]=useState('')
@@ -15,7 +15,7 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
  
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
- 
+    
       
       }
   const indexOfLastItem = activePage * itemsPerPage;
@@ -43,6 +43,7 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
     });
 
   return (
+  
     <div className="table-wrapper" style={{margin:"1rem"}}>
       
       <Table striped>
@@ -54,11 +55,16 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
             <Table.HeaderCell>Assignee</Table.HeaderCell>
             <Table.HeaderCell>Time</Table.HeaderCell>
             <Table.HeaderCell>Status</Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
 
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+       
+      
+       {data.length>0? <><Table.Body>
           {TableRows}
+
+        
         </Table.Body>
        
         <Pagination
@@ -67,7 +73,7 @@ export default function TableComponent({ data, setToggle, toggleTable }) {
         totalItemsCount={data.length}
         pageRangeDisplayed={5}
         onChange={handlePageChange}
-      />
+      /></>:<p style={{  fontWeight:"bold",  marginLeft: "245%", width:" inherit",padding: "15%"}}>No data found</p>} 
       </Table>
     <footer style={{textAlign:"center",color:"black"}}>&copy; Copyright 2023 &nbsp;Sridevi</footer>
 

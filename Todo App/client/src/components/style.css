@@ -97,7 +97,7 @@ margin-left: 5vh;
 max-height: 60%;
 align-items: center; }
 .container{
-  background: linear-gradient(skyblue,white);
+  background:aliceblue;
 
 margin-top: 2%;
   height:100vh !important;
@@ -210,9 +210,15 @@ font-size: medium !important;
 }
 
 .ui.menu{
-  background: #c8e0e0 !important;
+  background-color: blue !important;
+  color:white !important;
+
 
   width: 100% !important;
+}
+.menu{
+  color: white !important;
+  font-weight: bold !important;
 }
   tr:nth-child(even) {
   background-color: #f2f6f6 !important;
@@ -233,7 +239,7 @@ td{
   color: white !important;
 }
 .active-link {
-  background-color: #a7a9c8 !important /* set the background color to your desired color */
+  background-color: #1c4d93 !important /* set the background color to your desired color */
 }
 .tasks::-webkit-scrollbar {
   display: none;
@@ -251,7 +257,7 @@ td{
   justify-content: center;
   margin-top: 20px;
  
-   margin-left: 150%;
+   margin-left: 180%;
   
 }
 
@@ -282,17 +288,20 @@ h4{
   word-break: break-word;
 }
 
-
-.high{
+.superhigh{
   border-color:  red;
   border-width: revert;
 }
+.high{
+  border-color:  rgb(246, 158, 35);
+  border-width: revert;
+}
 .medium{
-border-color:  orange;
+border-color:  rgb(252, 240, 17);
 border-width: revert;
 }
 .low{
-  border-color:  blue;
+  border-color:  #22de65;
   border-width: revert;
 }
 input[type=checkbox] {

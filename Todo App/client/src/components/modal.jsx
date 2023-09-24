@@ -8,7 +8,7 @@ import './style.css'
 
 
 function ModalDisplay() {
-  const endpoint="http://192.168.1.43:3020/";
+  const endpoint="http://localhost:3020/";
   
   //get username using cookie
   const cookie = new Cookies();
@@ -83,7 +83,6 @@ function compare(a,b)
   const deletedTasks = (tasks.filter(task => task.status === "deleted")).sort((a,b)=>compare(a,b));
   const todoTasks = (tasks.filter(task => task.status === "no status")).sort((a,b)=>compare(a,b));
   
- 
   //min array to map the options in minutes for time
   const min = Array.from({ length: 60 }, (value, index) => {
     if (index < 10) {

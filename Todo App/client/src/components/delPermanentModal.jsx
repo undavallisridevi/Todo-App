@@ -12,7 +12,7 @@ const DelPermanentModal = ({
  
  
 }) => {
-  const endpoint="http://192.168.1.43:3020/";
+  const endpoint="http://localhost:3020/";
 
   const handleHide = (e) => {
     setdelPermanentVisibility(!visibility);
@@ -64,7 +64,3 @@ return (
 };
 
 export default DelPermanentModal;
-
-
-
-

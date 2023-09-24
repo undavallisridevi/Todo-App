@@ -14,7 +14,7 @@ const DeleteModal = ({
  
 }) => {
   const [description, setDesc] = useState('')
-  const endpoint="http://192.168.1.43:3020/";
+  const endpoint="http://localhost:3020/";
   useEffect(() => {
     function handleClickOutside(event) {
         if (event.target.closest('.more-details') === null) {

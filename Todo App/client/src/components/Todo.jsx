@@ -7,7 +7,7 @@ import Modal from './editmodel';
 import DeleteModal from './deletemodal';
 import DelPermanentModal from './delPermanentModal';
 export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTasks, deletedTasks, getalltasks }) {
-  const endpoint = "http://192.168.1.43:3020/";
+  const endpoint = "http://localhost:3020/";
 
   //to display modal only if taskid is not  null
   const [itemID, setID] = useState(null)
@@ -97,7 +97,9 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
     draggableTodo = event.target;                     //whole div having task is selected
   }
 
-  function dragEnd() {
+  function dragEnd(event) {
+    // const taskOrder = parseInt(event.target.style.order);
+    // console.log(taskOrder);
     draggableTodo = null;
   }
 
@@ -221,7 +223,7 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
               <Dropdown.Menu>
 
                 <Dropdown.Item className='drop' style={getOptionStyle('Pending Tasks')}>
-                  <input type="checkbox" checked={pendingbtn} id="pending"
+                  <input type="checkbox" defaultChecked={pendingbtn} id="pending"
                     onClick={() => {
                       setPendingToggle(!pendingbtn)
                       handleOptionClick('Pending Tasks')
@@ -232,7 +234,7 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
 
                 <Dropdown.Item className='drop' style={getOptionStyle('Progress Tasks')} >
                   <span>
-                    <input type="checkbox" id="progress" checked={progressbtn}
+                    <input type="checkbox" id="progress" defaultChecked={progressbtn}
                     onClick={() => {
                       setProgressToggle(!progressbtn)
                       handleOptionClick('Progress Tasks')
@@ -240,7 +242,7 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
                   <label htmlFor='progress'>Progress Tasks</label>
                 </Dropdown.Item>
                 <Dropdown.Item className='drop' style={getOptionStyle('Completed Tasks')} >
-                  <input type="checkbox" checked={completedbtn} id="completed"
+                  <input type="checkbox" defaultChecked={completedbtn} id="completed"
                     onClick={() => {
                       setCompletedToggle(!completedbtn)
                       handleOptionClick('Completed Tasks')
@@ -249,7 +251,7 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
                 </Dropdown.Item>
 
                 <Dropdown.Item className='drop' style={getOptionStyle('Deleted Tasks')}>
-                  <input type="checkbox" checked={deletedbtn} id="Deleted"
+                  <input type="checkbox" defaultChecked={deletedbtn} id="Deleted"
                     onClick={() => {
                       setDeletedToggle(!deletedbtn)
                       handleOptionClick('Deleted Tasks')
@@ -272,10 +274,10 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
           <div className='tasks' style={{ marginTop: "50px", overflowY: "auto", height: "400px" }} onDragOver={dragOver} onDrop={() => { setOpenAlert(true); return false; }} id="no_status" >
 
             {todoTasks.map(task => (
-              <fieldset className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : " low todo")} key={task._id} id={task._id} draggable="true" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} onDrop={()=>{return false}} onDragOver={()=>{return false}} style={styleForDiv} >
+              <fieldset className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : (task.priority==="SuperHigh"? "superhigh todo":"low todo"))} key={task._id} id={task._id} draggable="true" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} onDrop={()=>{return false}} onDragOver={()=>{return false}} style={styleForDiv} >
                 <legend>{task.priority}</legend>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
-                  {task.desc !== " " && task.desc !== "" ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)}</h4>}
+                  {task.desc!=undefined&&task.desc.trim().length!=0  && task.desc !== "" ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)}</h4>}
                   {task.time !== " " && task.time !== "" && task.time !== undefined ? <p style={{ width: " max-content" }}>Time: {task.time} </p> : <></>}
                   {task.starttime !== " " && task.starttime !== "" && task.starttime !== undefined ? <p>StartTime:{task.starttime}</p> : <></>}
                   {task.endtime !== " " && task.endtime !== "" && task.endtime !== undefined ? <p>End Time:{task.endtime}</p> : <></>}
@@ -292,10 +294,10 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
           <h1 style={{ position: "absolute" }} id="pendingtasks" onDrop={dragDrop}>Pending</h1>
           <div className='tasks' style={{ marginTop: "50px", overflowY: "auto", height: "400px" }} onDragEnter={dragEnter} onDragLeave={dragLeave} onDragOver={dragOver} onDrop={dragDrop} id="pending"  >
             {pending.map(task => (
-              <fieldset key={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : " low todo")} id={task._id} draggable="true" onDrop={dragDrop} onDragOver="return false" onDragStart={event => dragStart(event)} onDragEnd={dragEnd} style={styleForDiv}>
+              <fieldset key={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : (task.priority==="SuperHigh"? "superhigh todo":"low todo"))} id={task._id} draggable="true" onDrop={dragDrop} onDragOver={()=>{return false}}  onDragStart={event => dragStart(event)} onDragEnd={dragEnd} style={styleForDiv}>
                 <legend>{task.priority}</legend>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
-                  {task.desc !== " " && task.desc !== "" ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)} </h4>}
+                  {task.desc!=undefined&&task.desc.trim().length!=0 && task.desc !== "" ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)} </h4>}
                   {task.time !== " " && task.time !== "" && task.time !== undefined ? <p style={{ width: " max-content" }}>Time: {task.time} </p> : <></>}
                   {task.starttime !== " " && task.starttime !== "" && task.starttime !== undefined ? <p>StartTime:{task.starttime}</p> : <></>}
                   {task.endtime !== " " && task.endtime !== "" && task.endtime !== undefined ? <p>End Time:{task.endtime}</p> : <></>}
@@ -313,10 +315,10 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
           <h1 style={{ position: "absolute" }} id="progresstasks" onDrop={dragDrop}>Progress</h1>
           <div className='tasks' style={{ marginTop: "50px", overflowY: "auto", height: "400px" }} id="inprogress" onDragLeave={dragLeave} onDragEnter={dragEnter} onDragOver={dragOver} onDrop={dragDrop}>
             {inProgressTasks.map(task => (
-              <fieldset key={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : " low todo")} id={task._id} draggable="true" onDrop={dragDrop} onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+              <fieldset key={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : (task.priority==="SuperHigh"? "superhigh todo":"low todo"))} id={task._id} draggable="true" onDrop={dragDrop} onDragOver={()=>{return false}}  onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
                 <legend>{task.priority}</legend>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
-                  {task.desc !== " " && task.desc !== "" ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)} </h4>}
+                  {task.desc!=undefined&&task.desc.trim().length!=0  && task.desc !== "" ? <Popup content={task.desc} trigger={<h4> {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)} </h4>}
                   {task.time !== " " && task.time !== "" && task.time !== undefined ? <p style={{ width: " max-content" }}>Time: {task.time} </p> : <></>}
                   {task.starttime !== " " && task.starttime !== "" && task.starttime !== undefined ? <p>StartTime:{task.starttime}</p> : <></>}
                   {task.endtime !== " " && task.endtime !== "" && task.endtime !== undefined ? <p>End Time:{task.endtime}</p> : <></>}
@@ -334,10 +336,10 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
           <h1 style={{ position: "absolute" }} id="completedtasks" onDrop={dragDrop}>Completed</h1>
           <div style={{ marginTop: "50px", overflowY: "auto", height: "400px" }} id="completed" className='tasks' onDragLeave={dragLeave} onDragEnter={dragEnter} onDragOver={dragOver} onDrop={dragDrop} >
             {CompletedTasks.map(task => (
-              <fieldset key={task._id} id={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : " low todo")} draggable="true" onDrop={dragDrop} onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+              <fieldset key={task._id} id={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : (task.priority==="SuperHigh"? "superhigh todo":"low todo"))} draggable="true" onDrop={dragDrop} onDragOver={()=>{return false}}  onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
                 <legend>{task.priority}</legend>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
-                  {task.desc !== " " && task.desc !== "" ? <Popup content={task.desc} trigger={<h4>  {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)} </h4>}
+                  {task.desc!=undefined &&task.desc.trim().length!=0 && task.desc !== "" ? <Popup content={task.desc} trigger={<h4>  {capitalizeFirstLetter(task.task)}</h4>} /> : <h4> {capitalizeFirstLetter(task.task)} </h4>}
                   {task.time !== " " && task.time !== "" && task.time !== undefined ? <p style={{ width: " max-content" }}>Time: {task.time} </p> : <></>}
 
 
@@ -362,11 +364,11 @@ export default function Todo({ pending, inProgressTasks, todoTasks, CompletedTas
             &nbsp;&nbsp;<button className="ui primary button" style={{ backgroundColor: "blue", fontSize: "initial" }} id="show" onDrop={dragDrop} onClick={display}>Show</button>
           
             {deletedTasks.map(task => (
-              <fieldset key={task._id} id={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : " low todo")} draggable="true" onDrop={dragDrop} onDragOver="return false" onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
+              <fieldset key={task._id} id={task._id} className={task.priority === "High" ? " high todo" : (task.priority === "Medium" ? "medium todo" : (task.priority==="SuperHigh"? "superhigh todo":"low todo"))} draggable="true" onDrop={dragDrop} onDragOver={()=>{return false}}  onDragStart={dragStart} onDragEnd={dragEnd} style={styleForDiv}>
                 <legend>{task.priority}</legend>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'column' }}>
 
-                  {task.desc !== " " && task.desc !== "" ? <Popup content={task.desc} trigger={<h4>  {capitalizeFirstLetter(task.task)}</h4>} /> : <h4>  {capitalizeFirstLetter(task.task)} </h4>}
+                  {task.desc!=undefined &&task.desc.trim().length!=0  && task.desc !== "" ? <Popup content={task.desc} trigger={<h4>  {capitalizeFirstLetter(task.task)}</h4>} /> : <h4>  {capitalizeFirstLetter(task.task)} </h4>}
                   {task.time !== " " && task.time !== "" && task.time !== undefined ? <p style={{ width: " max-content" }}>Time: {task.time} </p> : <></>}
 
 

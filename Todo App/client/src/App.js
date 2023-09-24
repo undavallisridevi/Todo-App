@@ -7,6 +7,7 @@ import Login from "./components/login";
 import Auth from "./components/auth";
 import ErrorPage from "./components/error";
 import Cookies from "universal-cookie/es6";
+import Priority from "./components/priority";
 
 
 
@@ -58,6 +59,10 @@ const router=createBrowserRouter(!isAdmin
         path: "/admin",
         element: <Form />,
         },
+        {
+          path: "/dashboard",
+          element: <Priority />,
+          },
       {
          path:"",
         element: <ModalDisplay />,

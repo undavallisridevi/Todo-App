@@ -17,7 +17,7 @@ const Modal = ({
   starttime,
   endtime
 }) => {
-  const endpoint = "http://192.168.1.43:3020/";
+  const endpoint = "http://localhost:3020/";
    const options= [
     {key:"Low" ,value:'Low', text:'Low'},
     {key:"Medium",value:'Medium', text:'Medium'},

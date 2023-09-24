@@ -35,7 +35,7 @@ useEffect(() => {
         <div>
             <Menu fixed='top'>
                 {State.loggedIn ? ( isAdmin ? (<>
-                    <Menu.Item
+                    <Menu.Item className='menu'
                         name='home'
                         active={activeItem === 'home'}
                         as={NavLink}
@@ -43,21 +43,28 @@ useEffect(() => {
                         onClick={handleItemClick}
                     />
   
-                    <Menu.Item
+                    <Menu.Item className='menu'
                         name='Assign Task'
                         as={NavLink}
                         active={activeItem === 'Assign Task'}
                         to="/admin"
                         onClick={handleItemClick}
                     />
+                    <Menu.Item className='menu'
+                    name='Dashboard'
+                    as={NavLink}
+                    active={activeItem === 'Dashboard'}
+                    to="/dashboard"
+                    onClick={handleItemClick}
+                />
                    
                     <Menu.Menu position="right">
-        <Dropdown
+        <Dropdown style={{color:"white"}}
           item
           trigger={
             <>
               <Icon name="user circle" />
-              {username}
+              <b>{username}</b>
             </>
           }
         >
@@ -71,7 +78,7 @@ useEffect(() => {
       </Menu.Menu>
                 </>):(
                     <>
-                     <Menu.Item
+                     <Menu.Item className='menu'
                         name='home'
                         active={activeItem === 'home'}
                         as={NavLink}
@@ -86,7 +93,7 @@ useEffect(() => {
                     />
                     </>
 )) : (<>
-                    <Menu.Item
+                    <Menu.Item className='menu'
                         name='Login'
                         position='right'
                         active={activeItem === 'Login'}

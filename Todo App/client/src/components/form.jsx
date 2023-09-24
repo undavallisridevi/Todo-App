@@ -10,7 +10,7 @@ import Cookies from "universal-cookie"
 //component for admin to assign tasks 
 
 export default function Form() {
-  const endpoint = "http://192.168.1.43:3020/";
+  const endpoint = "http://localhost:3020/";
   const cookie = new Cookies();
 
   const user = cookie.get('username');
@@ -209,31 +209,30 @@ export default function Form() {
         <div style={{ width: "40%", opacity: "1", color: "white" }} >
 
           <h1 style={{ padding: "7%", fontSize: "xx-large" }}>Task Assignment</h1>
-          <form class="ui form" onSubmit={handleSubmit}>
-            <div class="field">
+          <form className="ui form" onSubmit={handleSubmit}>
+            <div className="field">
               <label className='adminlabel' >Task</label>
 
-              <input type="text" id="task" placeholder='Assign a task' name="task" value={task} onChange={handleInputChange} required />
+              <input type="text" id="task" placeholder="Assign a task" name="task" value={task} onChange={handleInputChange} required />
             </div>
-            <div class="field">
+            <div className="field">
               <label className='adminlabel' >Priority</label>
             <select id="priority" onChange={handlePriorityChange}>
-              <option value="Low" selected="selected">Low</option>
+              <option value="Low" defaultValue="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
             </div>
-            <div class="field">
+            <div className="field">
               <label className='adminlabel'>Description</label>
-              <input type="text" placeholder='description' name='desc' value={desc} onChange={handleDescChange} />
+              <input type="text" placeholder="description" name='desc' value={desc} onChange={handleDescChange} />
             </div>
-            <div class="field">
+            <div className="field">
               <label htmlFor='dropdown1' className='adminlabel' required>Assignee</label>
               <Dropdown
                 id="dropdown1"
-                placeholder={<div class="ui left icon input">
-                  Search Assignee.....    <i class="users icon"></i>
-                </div>}
+               placeholder='Search Assignee.....'
+              
                 fluid
                 clearable
                 multiple
@@ -244,10 +243,10 @@ export default function Form() {
                 onChange={handleChange}
                 required
               />
-              {showAlert && <div class="ui red message">Please select at least one option</div>}
+              {showAlert && <div className="ui red message">Please select at least one option</div>}
             </div>
-            <h3 style={{    textAlign: "start",display: "flex"}}><input type="checkbox" id="assigntome" name="assigntome" value={user} onClick={change} /> &nbsp; Assign to me </h3>
-            <button class="ui button" style={{
+           <div><h3 style={{    textAlign: "start",display: "flex"}}><input type="checkbox" id="assigntome" name="assigntome" value={user} onClick={change} /> &nbsp; Assign to me </h3></div> 
+            <button className="ui button" style={{
               backgroundColor: "seashell",
               color: "black",
               padding: "0.9rem 0.5rem",
@@ -259,7 +258,7 @@ export default function Form() {
         </div>
         {'\n'}
         <center><br />
-          <div><button class="ui positive button" onClick={toggle}> {show ? "Hide Tasks" : "Show Tasks"}</button></div>
+          <div><button className="ui positive button" onClick={toggle}> {show ? "Hide Tasks" : "Show Tasks"}</button></div>
 
 
           {'\n'}
@@ -270,9 +269,9 @@ export default function Form() {
 
         {show && <>
 
-          <div class="ui icon input" style={{ margin: "2%", float: "left" }} >
+          <div className="ui icon input" style={{ margin: "2%", float: "left" }} >
             <input  type="text" placeholder="Search..."  ref={searching} onChange={handleSearch} />
-            <i class="search icon"></i>
+            <i className="search icon"></i>
           </div>
 
           <TableComponent data={filteredData} toggleTable={toggleTable} setToggle={setToggle} />

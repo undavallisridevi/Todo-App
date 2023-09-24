@@ -239,8 +239,9 @@ td{
   color: white !important;
 }
 .active-link {
-  background-color: #1c4d93 !important /* set the background color to your desired color */
+  background-color: #0b3671 !important /* set the background color to your desired color */
 }
+
 .tasks::-webkit-scrollbar {
   display: none;
 }
